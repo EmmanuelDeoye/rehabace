@@ -1,0 +1,623 @@
+/* assets/css/design-details.css - blended with REHABACE + slideshow */
+:root {
+  --primary-color: #009688;
+  --secondary-color: #f4f6f8;
+  --bg-color: #ffffff;
+  --text-main: #333333;
+  --text-body: #2c3e50;
+  --text-muted: #666666;
+  --border-color: #e0e0e0;
+  --card-bg: #ffffff;
+  --shadow: 0 12px 28px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.02);
+  --radius-card: 20px;
+  --radius-btn: 40px;
+  --transition: all 0.25s ease;
+}
+[data-theme="dark"] {
+  --primary-color: #26a69a;
+  --secondary-color: #1e1e1e;
+  --bg-color: #121212;
+  --text-main: #e0e0e0;
+  --text-body: #d1d1d1;
+  --text-muted: #a0a0a0;
+  --border-color: #333333;
+  --card-bg: #1e1e1e;
+  --shadow: 0 12px 28px rgba(0,0,0,0.5);
+}
+
+.design-details-main {
+    min-height: calc(100vh - 70px);
+    padding: 20px 0;
+    background-color: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 0;
+    padding: 0 8px;
+}
+
+/* Back Button */
+.back-button-container {
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.back-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateX(-5px);
+}
+
+/* Design Details Content */
+.design-details-content {
+    background-color: none;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    position: relative;
+    padding: 0.2rem;
+}
+
+.design-details-loaded {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 992px) {
+    .design-details-loaded {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .design-details-content {
+    
+    padding: 1.5rem;
+    }
+    
+    .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    }
+
+}
+
+/* Slideshow Container */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background-color: none;
+}
+
+.main-image-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.main-slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 10;
+    font-size: 1.2rem;
+}
+
+.slide-btn:hover {
+    background-color: var(--primary-color);
+}
+
+.slide-btn.prev {
+    left: 10px;
+}
+
+.slide-btn.next {
+    right: 10px;
+}
+
+/* Thumbnail Navigation */
+.thumbnail-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.thumbnail {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.thumbnail:hover, .thumbnail.active {
+    opacity: 1;
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Design Info */
+.design-info {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.design-title-large {
+    font-size: 2rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.design-description-full {
+    color: var(--text-body);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.design-meta-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.meta-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.meta-value {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+/* Consult Button */
+.consult-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    background-color: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-btn);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.consult-button:hover {
+    background-color: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+    color: white;
+}
+
+.consult-button i {
+    font-size: 1.5rem;
+}
+
+/* Loading and Error States */
+.loading-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background-color: var(--card-bg);
+    border-radius: var(--radius-card);
+}
+
+.loading-overlay .spinner {
+    border: 4px solid rgba(0,150,136,0.1);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--card-bg);
+    border-radius: var(--radius-card);
+}
+
+.error-state i {
+    font-size: 4rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.error-state h3 {
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.error-state p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Consultation Modal */
+.consult-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.consult-modal-content {
+    background-color: var(--card-bg);
+    margin: 20px;
+    padding: 2rem;
+    border-radius: var(--radius-card);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.consult-modal-close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.consult-modal-close:hover {
+    color: var(--primary-color);
+}
+
+.consult-modal-content h2 {
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.consult-modal-content h2 i {
+    color: var(--primary-color);
+}
+
+.consult-design-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.consult-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.consult-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.consult-form-group input,
+.consult-form-group select,
+.consult-form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--bg-color);
+    color: var(--text-body);
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s;
+}
+
+.consult-form-group input:focus,
+.consult-form-group select:focus,
+.consult-form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.room-size-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+}
+
+.room-size-input label {
+    flex: 0 0 120px;
+    margin-bottom: 0;
+}
+
+.room-size-input select {
+    flex: 1;
+}
+
+.consult-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.consult-form-actions button {
+    flex: 1;
+    padding: 0.8rem;
+}
+
+#consult-spinner {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .design-details-main {
+        padding: 10px 0;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .design-details-content {
+        padding: 1rem;
+    }
+    
+    .design-title-large {
+        font-size: 1.5rem;
+    }
+    
+    .design-info {
+        padding: 0;
+    }
+    
+    .main-image-container {
+        height: 300px;
+    }
+    
+    .consult-modal-content {
+        padding: 1.5rem;
+        margin: 10px;
+    }
+    
+    .room-size-input {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .room-size-input label {
+        flex: auto;
+    }
+}
+
+
+/* Add to assets/css/design-details.css */
+
+/* Full Image Modal - Fixed z-index and positioning */
+.full-image-modal {
+    display: none;
+    position: fixed;
+    z-index: 999999; /* Extremely high z-index to ensure it's on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+}
+
+.full-image-content {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.full-image-display {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.full-image-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 1000000;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    line-height: 1;
+}
+
+.full-image-close:hover {
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.full-image-prev,
+.full-image-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 2rem;
+    z-index: 1000000;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.full-image-prev {
+    left: 20px;
+}
+
+.full-image-next {
+    right: 20px;
+}
+
+.full-image-prev:hover,
+.full-image-next:hover {
+    background-color: var(--primary-color);
+    border-color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .full-image-content {
+        width: 95vw;
+        height: 95vh;
+    }
+    
+    .full-image-prev,
+    .full-image-next {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+    
+    .full-image-prev {
+        left: 10px;
+    }
+    
+    .full-image-next {
+        right: 10px;
+    }
+    
+    .full-image-close {
+        top: -15px;
+        font-size: 2.5rem;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .full-image-prev,
+    .full-image-next {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .full-image-close {
+        top: -10px;
+        right: -5px;
+    }
+}
