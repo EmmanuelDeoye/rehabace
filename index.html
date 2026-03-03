@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REHABACE · healing spaces</title>
+  <!-- fonts & icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/design.css">
+</head>
+<body>
+  <!-- STICKY HEADER -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="logo">REHAB<span class="ace">ACE</span></div>
+      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#designs">Designs</a></li>
+          <li><a href="#marketplace">Marketplace</a></li>
+          <li><a href="#signup">Sign Up</a></li>
+        </ul>
+        <div class="theme-toggle" id="themeToggle">
+          <i class="fas fa-sun"></i>
+          <i class="fas fa-moon"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO with typewriter & floating blobs -->
+    <section id="hero" class="hero-section">
+      <div class="hero-blobs">
+        <div class="blob"></div><div class="blob"></div><div class="blob"></div>
+      </div>
+      <div class="container hero-content">
+        <h1 class="hero-title">Designing Healing Spaces <br>That Transform Lives</h1>
+        <div class="typewriter-container">
+          <span class="static-text">Specialized in</span>
+          <span class="typewriter" id="typewriter"></span>
+        </div>
+        <div class="hero-buttons">
+          <a href="design.html" class="btn btn-primary">Explore Designs</a>
+          <a href="marketplace.html" class="btn btn-outline"> Access trusted equipments</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGNS: horizontal scroll list (images only, latest 10) -->
+    <section id="designs" class="designs-section">
+      <div class="container">
+        <h2 class="section-title">Our Latest Designs</h2>
+        <div class="scroll-x" id="designScroll">
+          <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Loading designs...</div>
+        </div>
+      </div>
+      
+            <a href="design.html"><button id="view-more-profile">Explore More designs</button></a>
+        
+    </section>
+
+    <!-- MARKETPLACE: latest products (grid, click to display.html) -->
+    <section id="marketplace" class="marketplace-section">
+      <div class="container">
+        <h2 class="section-title">Latest in Marketplace</h2>
+        <div class="product-grid" id="productGrid">
+          <div style="padding: 2rem; text-align: center; color: var(--text-muted); grid-column: 1/-1;">Loading products...</div>
+        </div>
+      </div>
+      
+      <a href="design.html"><button id="view-more-profile">Explore More designs</button></a>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="testimonials-section">
+      <div class="container">
+        <h2 class="section-title">What Our Clients Say</h2>
+        <div class="testimonial-grid" id="testimonialGrid">
+          <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Loading testimonials...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT US -->
+    <section id="about" class="about-section">
+      <div class="container about-grid">
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=600&auto=format&fit=crop" alt="therapy room interior" loading="lazy">
+        </div>
+        <div class="about-text">
+          <h2>About Rehabace</h2>
+          <p>We are pioneers in <strong>interior design for therapy centers</strong>, creating sensory-rich environments that promote healing and development. Our team collaborates with occupational therapists, educators, and architects to deliver turnkey solutions.</p>
+          <ul>
+            <li>✨ Sensory room construction & equipment</li>
+            <li>🛋️ Rehabilitation furniture & layouts</li>
+            <li>🤝 Partnerships with healthcare professionals</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section id="faq" class="faq-section">
+      <div class="container">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-list" id="faqList"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING BOUNCING BUTTON (whatsapp) -->
+  <a href="https://wa.me/1234567890?text=Hello%20REHABACE%20I%20need%20a%20recommendation" target="_blank" class="floating-bounce-btn" id="floatBtn">
+    <i class="fab fa-whatsapp"></i> Contact us for recommendation
+  </a>
+  
+  
+  <footer class="modern-footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>REHABACE</h3>
+                <p>Designing healing spaces that transform lives</p>
+                <div class="social-links">
+                    <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-instagram'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="designs.html">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class='bx bx-map'></i> 44, Shonola Street, Ogba, Lagos state</p>
+                    <p><i class='bx bx-phone'></i> + (234) 8132-912-880</p>
+                    <p><i class='bx bx-envelope'></i> info@rehabace.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="rehabace@gmail.com" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 REHABACE. All rights reserved.</p>
+            <div class="legal-links">
+                <a href="terms.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+  <!-- FIREBASE + config + main js -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <!-- configuration.js is expected to initialize firebase (assume it exists) -->
+  <script src="assets/js/configuration.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Admin Dashboard | REHABACE</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="icon" href="assets/img/logo.png">
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">REHAB<span class="ace">ACE</span></div>
+            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="designs.html" class="active">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="#signup">Sign Up</a></li>
+                </ul>
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="admin-nav">
+                <ul>
+                    <li class="admin-nav-item active" data-tab="designs">
+                        <i class='bx bx-palette'></i>
+                        <span>Manage Designs</span>
+                    </li>
+                    <li class="admin-nav-item" data-tab="bookings">
+                        <i class='bx bx-calendar-check'></i>
+                        <span>Manage Bookings</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Designs Tab -->
+            <div id="designs-tab" class="admin-tab active">
+                <div class="admin-tab-header">
+                    <h2><i class='bx bx-palette'></i> Designs Management</h2>
+                    <button class="btn btn-primary" id="new-design-btn">
+                        <i class='bx bx-plus'></i> Add New Design
+                    </button>
+                </div>
+
+                <!-- Filters and Search -->
+                <div class="filters-section">
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="design-search" placeholder="Search designs by title or category...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <select id="category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="sensory">Sensory Rooms</option>
+                            <option value="creche">Creche Rooms</option>
+                            <option value="rehab centers">Rehab Centers</option>
+                            <option value="treatment spaces">Treatment Spaces</option>
+                            <option value="playground">Playgrounds</option>
+                        </select>
+                        
+                        <select id="sort-filter">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="az">A-Z</option>
+                            <option value="za">Z-A</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Designs Cards Grid -->
+                <div class="designs-grid" id="designs-grid">
+                    <div class="loading-state">Loading designs...</div>
+                </div>
+
+                <!-- Design Form Modal -->
+                <div class="admin-modal" id="design-modal">
+                    <div class="admin-modal-content">
+                        <div class="admin-modal-header">
+                            <h3 id="design-modal-title">Add New Design</h3>
+                            <span class="admin-modal-close" id="close-design-modal">&times;</span>
+                        </div>
+                        <form id="design-form">
+                            <input type="hidden" id="design-id">
+                            
+                            <div class="form-group">
+                                <label for="design-title">Title *</label>
+                                <input type="text" id="design-title" placeholder="e.g., Rainbow Sensory Room" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="design-category">Category *</label>
+                                <select id="design-category" required>
+                                    <option value="">Select category</option>
+                                    <option value="sensory">Sensory Room</option>
+                                    <option value="creche">Creche Room</option>
+                                    <option value="rehab centers">Rehab Center</option>
+                                    <option value="treatment spaces">Treatment Space</option>
+                                    <option value="playground">Playground</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="design-description">Description *</label>
+                                <textarea id="design-description" rows="3" placeholder="Describe the design..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="design-image">Main Image</label>
+                                <div class="image-upload-area" id="main-image-upload">
+                                    <input type="file" id="main-image-file" accept="image/*" style="display: none;">
+                                    <div class="upload-placeholder" id="main-image-placeholder">
+                                        <i class='bx bx-cloud-upload'></i>
+                                        <p>Tap to upload main image</p>
+                                        <span class="upload-hint">Recommended: 1200x800px</span>
+                                    </div>
+                                    <img id="main-image-preview" class="image-preview" style="display: none;">
+                                    <button type="button" class="btn-icon remove-image" id="remove-main-image" style="display: none;">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="design-image-url">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Additional Images (Optional)</label>
+                                <div class="additional-images-grid" id="additional-images-grid">
+                                    <div class="image-upload-area small" id="additional-image-upload">
+                                        <input type="file" id="additional-image-file" accept="image/*" multiple style="display: none;">
+                                        <div class="upload-placeholder small">
+                                            <i class='bx bx-plus'></i>
+                                            <span>Add Images</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="design-additional-urls">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancel-design">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="save-design">Save Design</button>
+                            </div>
+                        </form>
+                        <div id="upload-spinner" class="spinner" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="bookings-tab" class="admin-tab">
+                <div class="admin-tab-header">
+                    <h2><i class='bx bx-calendar-check'></i> Bookings Management</h2>
+                </div>
+
+                <!-- Bookings Filters -->
+                <div class="filters-section">
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="booking-search" placeholder="Search by name, phone or email...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <select id="booking-status-filter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        
+                        <select id="booking-sort">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bookings Cards Grid -->
+                <div class="bookings-grid" id="bookings-grid">
+                    <div class="loading-state">Loading bookings...</div>
+                </div>
+
+                <!-- Booking Details Modal -->
+                <div class="admin-modal" id="booking-modal">
+                    <div class="admin-modal-content">
+                        <div class="admin-modal-header">
+                            <h3>Booking Details</h3>
+                            <span class="admin-modal-close" id="close-booking-modal">&times;</span>
+                        </div>
+                        <div id="booking-details-content" class="booking-details-content"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Full Screen Image Modal -->
+    <div class="fullscreen-image-modal" id="fullscreen-image-modal">
+        <span class="fullscreen-close">&times;</span>
+        <img src="" alt="Full screen view" class="fullscreen-image" id="fullscreen-image">
+    </div>
+
+    <!-- Firebase & Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

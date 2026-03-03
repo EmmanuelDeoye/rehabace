@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Details | REHABACE</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- REHABACE fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/design-details.css">
+    <link rel="icon" href="assets/img/logo.png">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">REHAB<span class="ace">ACE</span></div>
+            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="designs.html" class="active">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="#signup">Sign Up</a></li>
+                </ul>
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="design-details-main">
+        <div class="container">
+            <div class="back-button-container">
+                <a href="design.html" class="back-button">
+                    <i class='bx bx-arrow-back'></i>
+                    Back to Designs
+                </a>
+            </div>
+            
+            <div class="design-details-content" id="design-details">
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <p>Loading design details...</p>
+                </div>
+                
+                <div class="error-state" id="error-state" style="display: none;">
+                    <i class='bx bx-error'></i>
+                    <h3>Design Not Found</h3>
+                    <p>The design you're looking for doesn't exist or has been removed.</p>
+                    <a href="design.html" class="btn btn-primary">Browse All Designs</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Consultation Modal -->
+    <div id="consult-modal" class="consult-modal">
+        <div class="consult-modal-content">
+            <span class="consult-modal-close">&times;</span>
+            <h2><i class='bx bx-calendar-check'></i> Schedule Consultation</h2>
+            <p class="consult-design-title" id="consult-design-title"></p>
+            
+            <form id="consult-form">
+                <div class="consult-form-group">
+                    <label for="rooms-count">Number of Rooms/Spaces *</label>
+                    <input type="number" id="rooms-count" min="1" value="1" required>
+                </div>
+                
+                <div id="room-sizes-container">
+                    <!-- Room size inputs will be dynamically added here -->
+                </div>
+                
+                <div class="consult-form-group">
+                    <label for="budget-type">Budget Type *</label>
+                    <select id="budget-type" required>
+                        <option value="">Select budget level</option>
+                        <option value="budget">Budget Friendly</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="exclusive">Exclusive</option>
+                    </select>
+                </div>
+                
+                <div class="consult-form-group">
+                    <label for="inspection-date">Preferred Inspection Date *</label>
+                    <input type="date" id="inspection-date" min="" required>
+                </div>
+                
+                <div class="consult-form-group">
+                    <label for="site-address">Site Location/Address *</label>
+                    <textarea id="site-address" rows="2" placeholder="Full address" required></textarea>
+                </div>
+                
+                <div class="consult-form-group">
+                    <label for="phone-number">Phone Number *</label>
+                    <input type="tel" id="phone-number" placeholder="e.g. 2348123456789" required>
+                </div>
+                
+                <div class="consult-form-group">
+                    <label for="email-optional">Email (Optional)</label>
+                    <input type="email" id="email-optional" placeholder="your@email.com">
+                </div>
+                
+                <div class="consult-form-actions">
+                    
+                    <button type="submit" class="btn btn-primary" id="submit-consult">
+                        <i class='bx bx-check'></i> Confirm Booking
+                    </button>
+                </div>
+                <div id="consult-spinner" class="spinner" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="modern-footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>REHAB<span class="ace">ACE</span></h3>
+                <p>Designing healing spaces that transform lives</p>
+                <div class="social-links">
+                    <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-instagram'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="designs.html">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class='bx bx-map'></i> 44, Shonola Street, Ogba, Lagos state</p>
+                    <p><i class='bx bx-phone'></i> + (234) 8132-912-880</p>
+                    <p><i class='bx bx-envelope'></i> info@rehabace.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="rehabace@gmail.com" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 REHABACE. All rights reserved.</p>
+            <div class="legal-links">
+                <a href="terms.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/mainload.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/design-details.js"></script>
+    <!-- Theme toggle -->
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('rehabace_theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                const newTheme = current === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('rehabace_theme', newTheme);
+            });
+        }
+        
+        // Mobile menu
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mainNav = document.getElementById('mainNav');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>

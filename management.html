@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- REHABACE fonts & icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- REHABACE CSS -->
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/management.css">
+    <link rel="stylesheet" href="assets/css/loading.css">
+    
+    <title>Admin Management · REHABACE</title>
+</head>
+<body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- REHABACE STICKY HEADER -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">REHAB<span class="ace">ACE</span></div>
+            
+            <!-- Cart Icon - Before mobile menu toggle -->
+            <div class="header-actions">
+                <div class="cart-icon-container" id="cart-icon-container">
+                    <div class="icon-circle">
+                        <i class='bx bx-cart'></i>
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="design.html">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="professionals.html">Professionals</a></li>
+                    <li><a href="centers.html">Centers</a></li>
+                    <li id="my-profile-nav-item" style="display: none;"><a href="users.html">My Profile</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    
+                    <!-- Auth Button -->
+                    <button id="login-btn" class="auth-btn">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <div class="container">
+                <div class="admin-header-content">
+                    <div>
+                        <h1 class="admin-title">Admin Management</h1>
+                        <p class="admin-subtitle">Manage products, orders, and customers</p>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="admin-logout-btn" id="admin-logout">
+                            <i class='bx bx-log-out'></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Access Control -->
+        <div class="admin-access-control" id="admin-access-control">
+            <div class="container">
+                <div class="access-card">
+                    <i class='bx bx-lock-alt'></i>
+                    <h2>Admin Access Required</h2>
+                    <p>Please enter your admin credentials to continue</p>
+                    <div class="access-form">
+                        <div class="form-group">
+                            <input type="email" id="admin-email" placeholder="Admin Email" required>
+                        </div>
+                        <div class="form-group password-group">
+                            <input type="password" id="admin-password" placeholder="Password" required>
+                            <span class="password-toggle" id="admin-password-toggle">
+                                <i class='bx bx-hide'></i>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="admin-code" placeholder="Admin Access Code" required>
+                        </div>
+                        <button class="access-btn" id="admin-login-btn">
+                            <i class='bx bx-log-in-circle'></i>
+                            Access Admin Panel
+                        </button>
+                        <div class="access-error" id="admin-error"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard (Hidden until authenticated) -->
+        <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
+            <div class="container">
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class='bx bx-package'></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-products">0</span>
+                            <span class="stat-label">Total Products</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class='bx bx-cart'></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-orders">0</span>
+                            <span class="stat-label">Total Orders</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class='bx bx-user'></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-customers">0</span>
+                            <span class="stat-label">Customers</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class='bx bx-truck'></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-deliveries">0</span>
+                            <span class="stat-label">Pending Delivery</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="products">
+                        <i class='bx bx-package'></i>
+                        <span>Products</span>
+                    </button>
+                    <button class="admin-tab" data-tab="orders">
+                        <i class='bx bx-cart'></i>
+                        <span>Orders</span>
+                    </button>
+                    <button class="admin-tab" data-tab="customers">
+                        <i class='bx bx-user'></i>
+                        <span>Customers</span>
+                    </button>
+                    <button class="admin-tab" data-tab="delivery">
+                        <i class='bx bx-truck'></i>
+                        <span>Delivery</span>
+                    </button>
+                    <button class="admin-tab" data-tab="analytics">
+                        <i class='bx bx-line-chart'></i>
+                        <span>Analytics</span>
+                    </button>
+                </div>
+
+                <!-- Products Tab -->
+                <div class="admin-tab-content active" id="products-tab">
+                    <div class="tab-header">
+                        <h2>Product Management</h2>
+                        <button class="btn btn-primary" id="add-product-btn">
+                            <i class='bx bx-plus'></i>
+                            Add New Product
+                        </button>
+                    </div>
+
+                    <!-- Product Filters -->
+                    <div class="product-filters">
+                        <div class="search-box">
+                            <i class='bx bx-search'></i>
+                            <input type="text" id="product-search" placeholder="Search products...">
+                        </div>
+                        <select id="product-category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="art & craft">Art & Craft</option>
+                            <option value="ball">Balls</option>
+                            <option value="massager">Massager</option>
+                            <option value="orals">Orals</option>
+                            <option value="puzzle">Puzzle</option>
+                            <option value="sensory materials">Sensory Materials</option>
+                            <option value="toys">Toys</option>
+                            <option value="weights">Weights</option>
+                        </select>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products will be loaded here -->
+                        <div class="loading-products">Loading products...</div>
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div class="admin-tab-content" id="orders-tab">
+                    <div class="tab-header">
+                        <h2>Order Management</h2>
+                        <div class="order-filters">
+                            <select id="order-status-filter">
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Orders List -->
+                    <div class="orders-list" id="orders-list">
+                        <!-- Orders will be loaded here -->
+                        <div class="loading-orders">Loading orders...</div>
+                    </div>
+                </div>
+
+                <!-- Customers Tab -->
+                <div class="admin-tab-content" id="customers-tab">
+                    <div class="tab-header">
+                        <h2>Customer Management</h2>
+                        <div class="customer-search">
+                            <i class='bx bx-search'></i>
+                            <input type="text" id="customer-search" placeholder="Search customers...">
+                        </div>
+                    </div>
+
+                    <!-- Customers List -->
+                    <div class="customers-list" id="customers-list">
+                        <!-- Customers will be loaded here -->
+                        <div class="loading-customers">Loading customers...</div>
+                    </div>
+                </div>
+
+                <!-- Delivery Tab -->
+                <div class="admin-tab-content" id="delivery-tab">
+                    <div class="tab-header">
+                        <h2>Delivery Management</h2>
+                        <button class="btn btn-primary" id="assign-delivery-btn">
+                            <i class='bx bx-plus'></i>
+                            Assign Delivery
+                        </button>
+                    </div>
+
+                    <!-- Delivery Stats -->
+                    <div class="delivery-stats">
+                        <div class="delivery-stat-item">
+                            <span class="stat-label">Pending</span>
+                            <span class="stat-value" id="pending-deliveries">0</span>
+                        </div>
+                        <div class="delivery-stat-item">
+                            <span class="stat-label">In Transit</span>
+                            <span class="stat-value" id="transit-deliveries">0</span>
+                        </div>
+                        <div class="delivery-stat-item">
+                            <span class="stat-label">Delivered</span>
+                            <span class="stat-value" id="delivered-deliveries">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Delivery List -->
+                    <div class="delivery-list" id="delivery-list">
+                        <!-- Deliveries will be loaded here -->
+                        <div class="loading-deliveries">Loading deliveries...</div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div class="admin-tab-content" id="analytics-tab">
+                    <div class="tab-header">
+                        <h2>Analytics & Reports</h2>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="date-range">
+                        <input type="date" id="start-date">
+                        <span>to</span>
+                        <input type="date" id="end-date">
+                        <button class="btn btn-outline" id="apply-date-range">Apply</button>
+                    </div>
+
+                    <!-- Analytics Cards -->
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Revenue</h3>
+                            <div class="analytics-value" id="total-revenue">₦0</div>
+                            <div class="analytics-trend" id="revenue-trend">
+                                <i class='bx bx-trending-up'></i>
+                                <span>+12% from last month</span>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Orders</h3>
+                            <div class="analytics-value" id="total-orders">0</div>
+                            <div class="analytics-sub">This month</div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Avg. Order Value</h3>
+                            <div class="analytics-value" id="avg-order">₦0</div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Top Categories</h3>
+                            <div class="top-categories" id="top-categories">
+                                <!-- Categories will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Buttons -->
+                    <div class="export-buttons">
+                        <button class="btn btn-outline" id="export-products">
+                            <i class='bx bx-download'></i>
+                            Export Products
+                        </button>
+                        <button class="btn btn-outline" id="export-orders">
+                            <i class='bx bx-download'></i>
+                            Export Orders
+                        </button>
+                        <button class="btn btn-outline" id="export-customers">
+                            <i class='bx bx-download'></i>
+                            Export Customers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Product Modal -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content modal-lg">
+                <span class="modal-close">&times;</span>
+                <h2 id="product-modal-title">Add New Product</h2>
+                
+                <form id="product-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Product Title *</label>
+                            <input type="text" id="product-title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="product-category" required>
+                                <option value="">Select Category</option>
+                                <option value="art & craft">Art & Craft</option>
+                                <option value="ball">Balls</option>
+                                <option value="massager">Massager</option>
+                                <option value="orals">Orals</option>
+                                <option value="puzzle">Puzzle</option>
+                                <option value="sensory materials">Sensory Materials</option>
+                                <option value="toys">Toys</option>
+                                <option value="weights">Weights</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Price *</label>
+                            <input type="text" id="product-price" placeholder="e.g., 25,000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Stock Quantity *</label>
+                            <input type="number" id="product-stock" min="0" value="0" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea id="product-description" rows="4"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Main Image URL *</label>
+                            <input type="url" id="product-image" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Image 2 (Optional)</label>
+                            <input type="url" id="product-image2">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Image 3 (Optional)</label>
+                            <input type="url" id="product-image3">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Image 4 (Optional)</label>
+                            <input type="url" id="product-image4">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Image 5 (Optional)</label>
+                            <input type="url" id="product-image5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" id="product-brand" value="REHABACE">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Weight</label>
+                            <input type="text" id="product-weight" placeholder="e.g., 2kg">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>SKU</label>
+                            <input type="text" id="product-sku">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancel-product">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-product">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Details Modal -->
+        <div id="order-modal" class="modal">
+            <div class="modal-content modal-lg">
+                <span class="modal-close">&times;</span>
+                <h2>Order Details</h2>
+                
+                <div id="order-details-content">
+                    <!-- Order details will be loaded here -->
+                </div>
+                
+                <div class="order-actions" id="order-actions">
+                    <!-- Order action buttons will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Assignment Modal -->
+        <div id="delivery-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2>Assign Delivery</h2>
+                
+                <form id="delivery-form">
+                    <div class="form-group">
+                        <label>Select Order</label>
+                        <select id="delivery-order" required>
+                            <option value="">Select Order</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Delivery Personnel</label>
+                        <input type="text" id="delivery-person" placeholder="Name of delivery person" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="delivery-phone" placeholder="Delivery person's phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Estimated Delivery Date</label>
+                        <input type="date" id="delivery-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="delivery-notes" rows="3" placeholder="Any special instructions"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancel-delivery">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Assign Delivery</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <div class="delete-content">
+                    <i class='bx bx-error-circle'></i>
+                    <h3>Confirm Delete</h3>
+                    <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+                    <div class="delete-actions">
+                        <button class="btn btn-outline" id="cancel-delete">Cancel</button>
+                        <button class="btn btn-primary" id="confirm-delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- REHABACE Footer -->
+    <footer class="modern-footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>REHAB<span class="ace">ACE</span></h3>
+                <p>Designing healing spaces that transform lives</p>
+                <div class="social-links">
+                    <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-instagram'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="design.html">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="professionals.html">Professionals</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class='bx bx-map'></i> 44, Shonola Street, Ogba, Lagos state</p>
+                    <p><i class='bx bx-phone'></i> + (234) 8132-912-880</p>
+                    <p><i class='bx bx-envelope'></i> info@rehabace.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 REHABACE. All rights reserved.</p>
+            <div class="legal-links">
+                <a href="terms.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/management.js"></script>
+</body>
+</html>

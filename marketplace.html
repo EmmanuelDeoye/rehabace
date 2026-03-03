@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- REHABACE fonts & icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- REHABACE CSS -->
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/marketplace.css">
+    <link rel="stylesheet" href="assets/css/loading.css">
+    <link rel="stylesheet" href="assets/css/cart.css">
+    
+    <title>Marketplace · REHABACE</title>
+</head>
+<body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    
+    <!-- REHABACE STICKY HEADER (matching home page) -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="logo">REHAB<span class="ace">ACE</span></div>
+        
+        <!-- Cart Icon - Moved before mobile menu toggle -->
+        <div class="header-actions">
+            <div class="cart-icon-container" id="cart-icon-container">
+                <div class="icon-circle">
+                    <i class='bx bx-cart'></i>
+                    <span id="cart-count" class="cart-badge">0</span>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="main-nav" id="mainNav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="design.html">Designs</a></li>
+                <li><a href="marketplace.html" class="active">Marketplace</a></li>
+                <li><a href="professionals.html">Professionals</a></li>
+                <li><a href="centers.html">Centers</a></li>
+                <li id="my-profile-nav-item" style="display: none;"><a href="users.html">My Profile</a></li>
+            </ul>
+            <div class="nav-actions">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </div>
+                
+                <!-- Auth Button -->
+                <button id="login-btn" class="auth-btn">Login</button>
+            </div>
+        </nav>
+    </div>
+</header>
+    <main>
+        <!-- Hero Section for Marketplace -->
+        
+
+        <!-- Search & Filter Section -->
+        <section class="search-filter-section">
+            <div class="container">
+                <div class="filter-wrapper">
+                    <div class="search-container">
+                        <div class="nav__search">
+                            <i class='bx bx-search nav__search-icon'></i>
+                            <input type="search" class="nav__search-input" id="search-input" placeholder="Search for therapy tools, equipment...">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-container">
+                        <div class="filter-dropdown">
+                            <select name="category" id="category-filter" class="filter-select">
+                                <option value="all">All Categories</option>
+                                <option value="art & craft">Art & Craft</option>
+                                <option value="ball">Balls</option>
+                                <option value="massager">Massager</option>
+                                <option value="orals">Orals</option>
+                                <option value="puzzle">Puzzle</option>
+                                <option value="sensory materials">Sensory Materials</option>
+                                <option value="toys">Toys</option>
+                                <option value="weights">Weights</option>
+                            </select>
+                            <i class='bx bx-chevron-down filter-icon'></i>
+                        </div>
+
+                        <div class="filter-dropdown">
+                            <select id="sort-by" class="filter-select">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                            </select>
+                            <i class='bx bx-chevron-down filter-icon'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="marketplace-grid-section">
+            <div class="container">
+                <div class="marketplace-grid" id="marketplace-items">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Order History Modal -->
+    <div id="order-history-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close">&times;</span>
+            <h3>Your Order History</h3>
+            <div class="order-history-container">
+                <div id="order-history-content">
+                    <div class="loading-orders">Loading your orders...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <span class="close-cart">&times;</span>
+            </div>
+            <div id="cart-items-container" class="cart-items-container"></div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total-price">₦0.00</span>
+                </div>
+                <button id="checkout-btn" class="checkout-btn">Checkout via Paystack</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-form="login">Login</div>
+                <div class="auth-tab" data-form="register">Register</div>
+            </div>
+
+            <form id="login-form" class="auth-form active">
+                <div class="error-message" id="login-error"></div>
+                <div class="form-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <span class="password-toggle" id="login-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="forgot-password.html">Forgot your password?</a>
+                </div>
+                
+                <div class="form-group terms-agreement">
+                    <label>By clicking login, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy policy</a></label>
+                </div>
+                
+                <button type="submit">Login</button>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="show-register">Register</a>
+                </div>
+            </form>
+
+            <form id="register-form" class="auth-form">
+                <div class="error-message" id="register-error"></div>
+                <div class="form-group">
+                    <input type="text" id="register-name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="register-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="register-password" placeholder="Password (min. 6 characters)" required>
+                    <span class="password-toggle" id="register-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="form-group terms-agreement">
+                    <label>By clicking register, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy policy</a></label>
+                </div>
+                
+                <button type="submit">Create Account</button>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="show-login">Login</a>
+                </div>
+                <div id="auth-spinner" class="spinner" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button (matching home page) -->
+    <a href="https://wa.me/2348132912880?text=Hello%20REHABACE%20I%20need%20help%20choosing%20therapy%20equipment" target="_blank" class="floating-bounce-btn" id="floatBtn">
+        <i class="fab fa-whatsapp"></i> Need help choosing?
+    </a>
+
+    <!-- REHABACE Footer -->
+    <footer class="modern-footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>REHAB<span class="ace">ACE</span></h3>
+                <p>Designing healing spaces that transform lives</p>
+                <div class="social-links">
+                    <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-instagram'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="design.html">Designs</a></li>
+                    <li><a href="marketplace.html">Marketplace</a></li>
+                    <li><a href="professionals.html">Professionals</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class='bx bx-map'></i> 44, Shonola Street, Ogba, Lagos state</p>
+                    <p><i class='bx bx-phone'></i> + (234) 8132-912-880</p>
+                    <p><i class='bx bx-envelope'></i> info@rehabace.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 REHABACE. All rights reserved.</p>
+            <div class="legal-links">
+                <a href="terms.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/marketplace.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+</body>
+</html>
