@@ -33,6 +33,14 @@ body {
   transition: background 0.3s, color 0.3s;
   scroll-behavior: smooth;
 }
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+
 .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
 
 /* ----- HEADER (mobile-first) ----- */
@@ -41,7 +49,6 @@ body {
   top: 0;
   z-index: 100;
   background: var(--bg-color);
-  
   backdrop-filter: blur(4px);
   background: rgba(255,255,255,0.8);
 }
@@ -62,56 +69,6 @@ body {
 }
 .logo .ace { color: var(--primary-color); }
 
-.main-nav {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  width: 100%;
-  background: var(--bg-color);
-  flex-direction: column;
-  padding: 2rem;
-  box-shadow: 0 20px 30px rgba(0,0,0,0.1);
-  transform: translateY(-150%);
-  transition: transform 0.3s ease;
-  border-bottom: 1px solid var(--border-color);
-  z-index: 99;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-.main-nav.active { transform: translateY(0); }
-.main-nav ul {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  gap: 1.5rem;
-  text-align: center;
-}
-.main-nav a {
-  text-decoration: none;
-  font-weight: 500;
-  color: var(--text-body);
-  transition: color 0.2s;
-  font-size: 1.1rem;
-}
-.main-nav a:hover { color: var(--primary-color); }
-
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--secondary-color);
-  padding: 8px 16px;
-  border-radius: 40px;
-  cursor: pointer;
-  border: 1px solid var(--border-color);
-}
-.theme-toggle i { font-size: 1.2rem; color: var(--text-muted); }
-.theme-toggle .fa-sun { color: #f39c12; }
-.theme-toggle .fa-moon { color: #7f8c8d; }
-[data-theme="dark"] .theme-toggle .fa-sun { color: #bdc3c7; }
-[data-theme="dark"] .theme-toggle .fa-moon { color: #f1c40f; }
-
 .mobile-menu-toggle {
   display: block;
   background: transparent;
@@ -119,29 +76,190 @@ body {
   font-size: 1.8rem;
   color: var(--text-main);
   cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 101;
+}
+.mobile-menu-toggle i {
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.mobile-menu-toggle.active i {
+  transform: rotate(180deg);
 }
 
+/* Overlay */
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 98;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+.nav-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Main Navigation - Mobile Styles */
+.main-nav {
+  position: fixed;
+  top: 0;
+  right: -85%; /* Start off-screen */
+  width: 80%;
+  max-width: 350px;
+  height: 100vh;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  background: rgba(var(--card-bg-rgb), 0.98);
+  padding: 100px 2rem 2rem;
+  box-shadow: -5px 0 30px rgba(0,0,0,0.15);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  overflow-y: auto;
+  border-left: 1px solid var(--border-color);
+}
+[data-theme="dark"] .main-nav {
+  background: rgba(30, 30, 30, 0.98);
+}
+.main-nav.active {
+  right: 0; /* Slide in */
+}
+
+.main-nav ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.main-nav ul li {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transition-delay: calc(0.05s * var(--i, 1));
+  width: 100%;
+}
+
+.main-nav.active ul li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.main-nav ul li a {
+  display: block;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--text-body);
+  transition: all 0.2s;
+  font-size: 1.2rem;
+  padding: 1rem 1.5rem;
+  background: var(--secondary-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
+  width: 100%;
+  text-align: left;
+}
+
+.main-nav ul li a:hover {
+  color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,150,136,0.15);
+  border-color: var(--primary-color);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--secondary-color);
+  padding: 12px 20px;
+  border-radius: 40px;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  width: fit-content;
+  margin-top: auto;
+  box-shadow: var(--shadow);
+}
+.theme-toggle i { font-size: 1.2rem; color: var(--text-muted); }
+.theme-toggle .fa-sun { color: #f39c12; }
+.theme-toggle .fa-moon { color: #7f8c8d; }
+[data-theme="dark"] .theme-toggle .fa-sun { color: #bdc3c7; }
+[data-theme="dark"] .theme-toggle .fa-moon { color: #f1c40f; }
+
+/* Desktop styles - unchanged */
 @media (min-width: 768px) {
-  .header-container { height: 80px; }
-  .logo { font-size: 1.9rem; }
-  .mobile-menu-toggle { display: none; }
+  .mobile-menu-toggle {
+    display: none;
+  }
+  .nav-overlay {
+    display: none;
+  }
   .main-nav {
     position: static;
+    right: auto;
     transform: none;
     width: auto;
+    max-width: none;
+    height: auto;
     background: transparent;
-    flex-direction: row;
+    backdrop-filter: none;
     padding: 0;
     box-shadow: none;
-    border-bottom: none;
+    border-left: none;
+    flex-direction: row;
     gap: 2.5rem;
+    overflow: visible;
+    transition: none;
   }
   .main-nav ul {
     flex-direction: row;
     gap: 2rem;
   }
-  .main-nav a { font-size: 1rem; }
+  .main-nav ul li {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    width: auto;
+  }
+  .main-nav ul li a {
+    background: transparent;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  .main-nav ul li a:hover {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    color: var(--primary-color);
+  }
+  .theme-toggle {
+    margin-top: 0;
+    padding: 8px 16px;
+  }
 }
+
+/* ----- rest of the CSS remains exactly as provided in original file ----- */
+/* (All the existing styles below are preserved exactly as in the original) */
 
 /* ----- HERO (mobile-first) ----- */
 .hero-section {
@@ -1307,81 +1425,582 @@ body {
 }
 
 
-/* Header actions (cart + mobile toggle) */
+/* Remove old cart-in-nav styles and update header-actions */
 .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+  z-index: 102;
 }
 
+/* Theme toggle in header (single icon) */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+.theme-toggle i {
+  font-size: 1.2rem;
+  color: var(--text-main);
+  transition: transform 0.3s ease;
+}
+.theme-toggle:hover {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+}
+.theme-toggle:hover i {
+  color: white;
+}
+
+/* Mobile nav hidden fully */
+.main-nav {
+  position: fixed;
+  top: 0;
+  right: -100%; /* was -85%, now fully off-screen */
+  width: 80%;
+  max-width: 350px;
+  height: 100vh;
+  background: var(--card-bg);
+  padding: 100px 2rem 2rem;
+  box-shadow: -5px 0 30px rgba(0,0,0,0.15);
+  z-index: 99;
+  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  border-left: 1px solid var(--border-color);
+}
+.main-nav.active {
+  right: 0;
+}
+
+/* Desktop styles */
 @media (min-width: 768px) {
-    .header-actions {
-        display: none; /* Hide on desktop since cart is in nav */
-    }
-    
-    .main-nav .cart-icon-container {
-        display: flex; /* Show in nav on desktop */
-    }
-}
-
-/* Desktop cart icon in nav */
-.main-nav .cart-icon-container {
+  .mobile-menu-toggle {
     display: none;
+  }
+  .main-nav {
+    position: static;
+    right: auto;
+    width: auto;
+    max-width: none;
+    height: auto;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border-left: none;
+    display: flex;
+    align-items: center;
+  }
+  .main-nav ul {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+  .main-nav ul li {
+    opacity: 1;
+    transform: none;
+    width: auto;
+  }
+  .main-nav ul li a {
+    background: transparent;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-body);
+  }
+  .main-nav ul li a:hover {
+    color: var(--primary-color);
+    background: transparent;
+  }
+}
+
+
+
+/* Add to assets/css/home.css - SCROLL ANIMATIONS */
+
+/* Base animation styles */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-on-scroll.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animations for cards */
+.design-card.animate-on-scroll,
+.product-card.animate-on-scroll,
+.testimonial-card-scroll.animate-on-scroll,
+.faq-item.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.design-card.animate-on-scroll.animate-in,
+.product-card.animate-on-scroll.animate-in,
+.testimonial-card-scroll.animate-on-scroll.animate-in,
+.faq-item.animate-on-scroll.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Section title animations */
+.section-title.animate-on-scroll {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.section-title.animate-on-scroll.animate-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Reveal animations for about section */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* About image specific animation */
+.about-image.reveal-on-scroll {
+  transform: translateX(-40px);
+}
+
+.about-image.reveal-on-scroll.revealed {
+  transform: translateX(0);
+}
+
+.about-text.reveal-on-scroll {
+  transform: translateX(40px);
+}
+
+.about-text.reveal-on-scroll.revealed {
+  transform: translateX(0);
+}
+
+/* Hover glow effect for buttons */
+.hover-glow {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 150, 136, 0.3);
+}
+
+.hover-glow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.hover-glow:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Page transition */
+.page-transition-out {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* Hero parallax enhancement */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.blob {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* Counter animation (if you add stats later) */
+.counter {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+/* Scroll indicator for testimonials enhancement */
+.scroll-indicators {
+  margin-top: 20px;
+}
+
+.scroll-dot {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-dot.active {
+  background: var(--primary-color);
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Floating button animation enhancement */
+.floating-bounce-btn {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+}
+
+/* Design cards hover effect */
+.design-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.design-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 150, 136, 0.2);
+}
+
+.design-card img {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.design-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Product cards hover enhancement */
+.product-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover::before {
+  left: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 150, 136, 0.15);
+}
+
+.product-card img {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Testimonial cards hover */
+.testimonial-card-scroll {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-card-scroll:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 150, 136, 0.15);
+}
+
+.stars i {
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card-scroll:hover .stars i {
+  transform: scale(1.1);
+  color: #f1c40f;
+}
+
+/* FAQ accordion animation enhancement */
+.faq-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover {
+  background: rgba(0, 150, 136, 0.02);
+  padding-left: 10px;
+  border-radius: 8px;
+}
+
+.faq-question i {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item.open .faq-question i {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Newsletter form animation */
+.newsletter-form input,
+.newsletter-form button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.newsletter-form input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 150, 136, 0.1);
+}
+
+.newsletter-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 150, 136, 0.3);
+}
+
+/* Social links animation */
+.social-links a {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-links a:hover {
+  transform: translateY(-3px) scale(1.1);
+}
+
+/* Typewriter cursor enhancement */
+.typewriter {
+  border-right: 3px solid var(--primary-color);
+  animation: blinkCursor 1s step-end infinite,
+             glowText 2s ease-in-out infinite;
+}
+
+@keyframes glowText {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(0, 150, 136, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 150, 136, 0.8);
+  }
+}
+
+/* Loading animation for cards */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.loading-placeholder {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Mobile menu animation enhancement - UPDATED */
+.main-nav {
+  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.main-nav.active {
+  right: 0;
+}
+
+.main-nav ul li {
+  transform: translateX(40px);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transition-delay: calc(0.05s * var(--i, 1));
+}
+
+.main-nav.active ul li {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Smooth section transitions */
+section {
+  position: relative;
+  overflow: hidden;
+}
+
+section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+section:hover::after {
+  transform: scaleX(1);
+}
+
+
+
+/* Add this to assets/css/home.css */
+
+/* Design card links - FIX FOR BROKEN DESIGNS */
+.design-card-link {
+  text-decoration: none;
+  display: block;
+  flex: 0 0 75vw;
+  max-width: 300px;
+  scroll-snap-align: start;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.design-card-link .design-card {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: block;
+}
+
+/* Ensure design cards themselves maintain proper styling */
+.design-card {
+  width: 100%;
+  height: 250px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.design-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fix for scroll-x container to properly display linked cards */
+.scroll-x {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 8px 4px 20px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.scroll-x > * {
+  scroll-snap-align: start;
+}
+
+/* Ensure product grid displays properly */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 @media (min-width: 768px) {
-    .main-nav .cart-icon-container {
-        display: flex;
-        margin-right: 10px;
-    }
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-/* Cart icon styles */
-.cart-icon-container {
-    cursor: pointer;
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-.icon-circle {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--secondary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+/* Fix for header navigation */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  flex-wrap: wrap;
 }
 
-.icon-circle:hover {
-    background: var(--primary-color);
-    transform: translateY(-2px);
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+  z-index: 102;
 }
 
-.icon-circle:hover i {
-    color: white;
-}
-
-.icon-circle i {
-    font-size: 1.3rem;
-    color: var(--text-main);
-    transition: color 0.3s ease;
-}
-
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #e74c3c;
-    color: white;
-    font-size: 0.7rem;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    border: 2px solid var(--card-bg);
+@media (min-width: 768px) {
+  .header-container {
+    flex-wrap: nowrap;
+  }
+  
+  .header-actions {
+    order: 2;
+    margin-left: 0;
+  }
+  
+  .main-nav {
+    order: 1;
+    margin-left: auto;
+    margin-right: 20px;
+  }
 }
