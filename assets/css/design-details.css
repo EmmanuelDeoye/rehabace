@@ -621,3 +621,539 @@
         right: -5px;
     }
 }
+
+
+
+/* Add to assets/css/design-details.css */
+
+/* Description formatting */
+.design-description-full p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text-body);
+}
+
+.design-description-full p:last-child {
+    margin-bottom: 0;
+}
+
+/* Feature tags */
+.features-item {
+    flex: 0 0 100%;
+}
+
+.feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.feature-tag {
+    background: var(--secondary-color);
+    color: var(--text-main);
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+}
+
+/* Related Designs Section */
+.related-designs-section {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.related-designs-section .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.related-designs-section .section-title:after {
+    width: 40px;
+}
+
+.related-designs-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 8px 4px 20px;
+    cursor: grab;
+    user-select: none;
+}
+
+.related-designs-scroll.active {
+    cursor: grabbing;
+}
+
+.related-designs-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.related-designs-scroll::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+.related-designs-scroll::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.related-design-card {
+    flex: 0 0 280px;
+    max-width: 300px;
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border-color);
+    scroll-snap-align: start;
+    transition: transform 0.3s ease;
+}
+
+.related-design-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,150,136,0.15);
+}
+
+.related-design-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.related-design-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.related-design-card:hover .related-design-image img {
+    transform: scale(1.05);
+}
+
+.related-design-info {
+    padding: 1rem;
+}
+
+.related-design-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.related-design-category {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Loading placeholder */
+.loading-placeholder {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .related-design-card {
+        flex: 0 0 240px;
+    }
+    
+    .related-design-image {
+        height: 150px;
+    }
+    
+    .feature-tags {
+        gap: 0.3rem;
+    }
+    
+    .feature-tag {
+        padding: 0.2rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .related-design-card {
+        flex: 0 0 260px;
+    }
+}
+
+/* Add margin to design details loaded */
+.design-details-loaded {
+    margin-bottom: 2rem;
+}
+
+
+
+/* Add to assets/css/design-details.css */
+
+/* Form styling enhancements */
+.form-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview-item {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Better select styling */
+select, input, textarea {
+    background-color: var(--bg-color);
+    color: var(--text-body);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+select:focus, input:focus, textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,150,136,0.1);
+}
+
+/* Room size inputs for sensory/rehab */
+.room-size-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.room-size-input label {
+    flex: 0 0 80px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.room-size-input select {
+    flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .room-size-input {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .room-size-input label {
+        flex: auto;
+    }
+    
+    .room-size-input select {
+        width: 100%;
+    }
+    
+    .image-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+}
+
+/* Consult button enhancement */
+
+
+/* Success message styling */
+.consult-success {
+    text-align: center;
+    padding: 2rem;
+    background: var(--secondary-color);
+    border-radius: var(--radius-card);
+    margin-top: 1rem;
+}
+
+.consult-success i {
+    font-size: 4rem;
+    color: #25D366;
+    margin-bottom: 1rem;
+}
+
+.consult-success h3 {
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.consult-success p {
+    color: var(--text-muted);
+}
+
+
+/* Add to assets/css/design-details.css */
+
+/* Heartbeat animation for consult button - ALWAYS PLAYING */
+.consult-button {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    border: none;
+    padding: 1.2rem;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+    
+    /* Force animation to always play */
+    animation: heartbeat 2s ease-in-out infinite !important;
+    -webkit-animation: heartbeat 2s ease-in-out infinite !important;
+    
+    transform-origin: center;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    
+    /* Ensure no other animation overrides */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Heartbeat keyframes - more pronounced and reliable */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.1);
+    }
+    30% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.1);
+    }
+    60% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Safari support */
+@-webkit-keyframes heartbeat {
+    0% {
+        -webkit-transform: scale(1);
+    }
+    15% {
+        -webkit-transform: scale(1.1);
+    }
+    30% {
+        -webkit-transform: scale(1);
+    }
+    45% {
+        -webkit-transform: scale(1.1);
+    }
+    60% {
+        -webkit-transform: scale(1);
+    }
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+
+/* Icon animation - sync with button */
+.consult-button i {
+    animation: icon-pulse 2s ease-in-out infinite !important;
+    -webkit-animation: icon-pulse 2s ease-in-out infinite !important;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+@keyframes icon-pulse {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.3);
+    }
+    30% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.3);
+    }
+    60% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hover effect - maintain heartbeat but add extra effects */
+.consult-button:hover {
+    /* Keep the heartbeat animation but add extra effects */
+    animation: heartbeat 2s ease-in-out infinite !important;
+    -webkit-animation: heartbeat 2s ease-in-out infinite !important;
+    
+    /* Additional hover effects */
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(37, 211, 102, 0.5);
+}
+
+.consult-button:hover i {
+    animation: icon-pulse 2s ease-in-out infinite !important;
+    -webkit-animation: icon-pulse 2s ease-in-out infinite !important;
+}
+
+/* Glow effect */
+.consult-button::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    border-radius: var(--radius-btn);
+    z-index: -1;
+    opacity: 0;
+    animation: glow-pulse 2s ease-in-out infinite !important;
+    -webkit-animation: glow-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes glow-pulse {
+    0% {
+        opacity: 0.3;
+        filter: blur(5px);
+        transform: scale(1);
+    }
+    15% {
+        opacity: 0.8;
+        filter: blur(10px);
+        transform: scale(1.05);
+    }
+    30% {
+        opacity: 0.3;
+        filter: blur(5px);
+        transform: scale(1);
+    }
+    45% {
+        opacity: 0.8;
+        filter: blur(10px);
+        transform: scale(1.05);
+    }
+    60% {
+        opacity: 0.3;
+        filter: blur(5px);
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.3;
+        filter: blur(5px);
+        transform: scale(1);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .consult-button {
+        padding: 1rem;
+        font-size: 1.1rem;
+        animation: heartbeat-mobile 2s ease-in-out infinite !important;
+        -webkit-animation: heartbeat-mobile 2s ease-in-out infinite !important;
+    }
+    
+    @keyframes heartbeat-mobile {
+        0% { transform: scale(1); }
+        15% { transform: scale(1.05); }
+        30% { transform: scale(1); }
+        45% { transform: scale(1.05); }
+        60% { transform: scale(1); }
+        100% { transform: scale(1); }
+    }
+    
+    .consult-button i {
+        animation: icon-pulse-mobile 2s ease-in-out infinite !important;
+    }
+    
+    @keyframes icon-pulse-mobile {
+        0% { transform: scale(1); }
+        15% { transform: scale(1.2); }
+        30% { transform: scale(1); }
+        45% { transform: scale(1.2); }
+        60% { transform: scale(1); }
+        100% { transform: scale(1); }
+    }
+}
+
+/* For users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .consult-button,
+    .consult-button i,
+    .consult-button::after {
+        animation: none !important;
+        -webkit-animation: none !important;
+    }
+    
+    .consult-button {
+        transform: none;
+    }
+    
+    .consult-button:hover {
+        transform: translateY(-3px);
+    }
+}
+
+/* Add a subtle shine effect */
+.consult-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shine 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
