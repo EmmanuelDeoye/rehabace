@@ -1,30 +1,144 @@
-// assets/js/home.js - complete updated file with horizontal testimonials and caching
+// assets/js/home.js - complete updated file with fixes
 (function() {
-  // ------ THEME TOGGLE ------
+  // ------ THEME TOGGLE (single icon) ------
   const themeToggle = document.getElementById('themeToggle');
   const html = document.documentElement;
   const savedTheme = localStorage.getItem('rehabace_theme') || 'light';
   html.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
 
   themeToggle.addEventListener('click', () => {
     const current = html.getAttribute('data-theme');
     const newTheme = current === 'light' ? 'dark' : 'light';
     html.setAttribute('data-theme', newTheme);
     localStorage.setItem('rehabace_theme', newTheme);
+    updateThemeIcon(newTheme);
   });
 
-  // ------ MOBILE MENU ------
+  function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector('i');
+    if (icon) {
+      icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+  }
+
+  // ------ PREMIUM MOBILE NAVIGATION ------
   const mobileToggle = document.getElementById('mobileToggle');
   const mainNav = document.getElementById('mainNav');
-  if (mobileToggle) {
-    mobileToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('active');
+  const navOverlay = document.getElementById('navOverlay');
+  const body = document.body;
+
+  // Touch gesture variables
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isDragging = false;
+  let initialNavRight = 0;
+  const threshold = 0.4; // 40% drag to close
+
+  if (mobileToggle && mainNav && navOverlay) {
+    // Helper to set CSS variable for item indices
+    const navItems = mainNav.querySelectorAll('ul li');
+    navItems.forEach((item, index) => {
+      item.style.setProperty('--i', index + 1);
     });
-  }
-  
-  if (mainNav) {
+
+    // Open nav function
+    const openNav = () => {
+      mainNav.classList.add('active');
+      navOverlay.classList.add('active');
+      body.classList.add('nav-open');
+      mobileToggle.classList.add('active');
+      const icon = mobileToggle.querySelector('i');
+      if (icon) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      }
+    };
+
+    // Close nav function
+    const closeNav = () => {
+      mainNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      body.classList.remove('nav-open');
+      mobileToggle.classList.remove('active');
+      const icon = mobileToggle.querySelector('i');
+      if (icon) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+      // Reset any drag transform
+      mainNav.style.transform = '';
+      mainNav.style.transition = '';
+    };
+
+    // Toggle nav on hamburger click
+    mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (mainNav.classList.contains('active')) {
+        closeNav();
+      } else {
+        openNav();
+      }
+    });
+
+    // Close nav when clicking overlay
+    navOverlay.addEventListener('click', closeNav);
+
+    // Close nav when clicking a link inside
     mainNav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => mainNav.classList.remove('active'));
+      link.addEventListener('click', closeNav);
+    });
+
+    // --- SWIPE / DRAG TO CLOSE (GESTURE SUPPORT) ---
+    mainNav.addEventListener('touchstart', (e) => {
+      if (!mainNav.classList.contains('active')) return;
+      touchStartX = e.touches[0].clientX;
+      initialNavRight = 0; // Nav is at right: 0 when open
+      isDragging = true;
+      // Temporarily disable transition for smooth drag
+      mainNav.style.transition = 'none';
+    }, { passive: true });
+
+    mainNav.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault(); // Prevent scrolling while dragging
+      touchCurrentX = e.touches[0].clientX;
+      const deltaX = touchCurrentX - touchStartX; // Positive when swiping right
+
+      // Only allow right swipe (to close)
+      if (deltaX > 0) {
+        const navWidth = mainNav.offsetWidth;
+        const dragPercent = Math.min(deltaX / navWidth, 1);
+        // Translate nav to the right (move off-screen)
+        mainNav.style.transform = `translateX(${deltaX}px)`;
+      }
+    }, { passive: false });
+
+    mainNav.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const deltaX = (touchCurrentX || touchStartX) - touchStartX;
+      const navWidth = mainNav.offsetWidth;
+      const dragPercent = deltaX / navWidth;
+
+      // Re-enable transition
+      mainNav.style.transition = 'right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+
+      if (dragPercent > threshold) {
+        // Close nav if dragged past threshold
+        closeNav();
+      } else {
+        // Snap back to open position
+        mainNav.style.transform = '';
+      }
+    }, { passive: true });
+
+    mainNav.addEventListener('touchcancel', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      mainNav.style.transition = 'right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+      mainNav.style.transform = '';
     });
   }
 
@@ -289,9 +403,12 @@
           let html = '';
           designs.forEach(d => {
             const imgUrl = d.imageUrl || 'https://via.placeholder.com/300x200?text=' + encodeURIComponent(d.title || 'Design');
-            html += `<div class="design-card">
-              <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
-            </div>`;
+            const pushId = d.id || d.push || 'sample';
+            html += `<a href="design-details.html?id=${encodeURIComponent(pushId)}" class="design-card-link">
+              <div class="design-card">
+                <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+              </div>
+            </a>`;
           });
           designContainer.innerHTML = html;
           console.log('Loaded designs from cache');
@@ -314,7 +431,7 @@
             const title = p.title || 'Unnamed Product';
             const price = p.price || 'Price on request';
             
-            html += `<a href="display.html?productId=${encodeURIComponent(pushId)}" class="product-card">
+            html += `<a href="display.html?push=${encodeURIComponent(pushId)}" class="product-card">
               <img src="${imgUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
               <div class="product-info">
                 <div class="product-title">${title}</div>
@@ -368,9 +485,12 @@
           let html = '';
           latest.forEach(d => {
             const imgUrl = d.imageUrl || 'https://via.placeholder.com/300x200?text=' + encodeURIComponent(d.title || 'Design');
-            html += `<div class="design-card">
-              <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
-            </div>`;
+            const pushId = d.id || d.push || 'sample';
+            html += `<a href="design-details.html?id=${encodeURIComponent(pushId)}" class="design-card-link">
+              <div class="design-card">
+                <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+              </div>
+            </a>`;
           });
           
           designContainer.innerHTML = html;
@@ -416,7 +536,7 @@
             const title = p.title || 'Unnamed Product';
             const price = p.price || 'Price on request';
             
-            html += `<a href="display.html?productId=${encodeURIComponent(pushId)}" class="product-card">
+            html += `<a href="display.html?push=${encodeURIComponent(pushId)}" class="product-card">
               <img src="${imgUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
               <div class="product-info">
                 <div class="product-title">${title}</div>
@@ -441,26 +561,24 @@
     // Show sample designs if no cache and no Firebase
     if (designContainer && designContainer.children.length === 0) {
       const sampleDesigns = [
-        'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop',
-        'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&bw=1',
-        'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&sat=-100',
-        'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&blur=50'
+        { imageUrl: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop', title: 'Sensory Room 1', id: 'sample1' },
+        { imageUrl: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&bw=1', title: 'Sensory Room 2', id: 'sample2' },
+        { imageUrl: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&sat=-100', title: 'Sensory Room 3', id: 'sample3' },
+        { imageUrl: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&blur=50', title: 'Sensory Room 4', id: 'sample4' }
       ];
       
       let html = '';
-      sampleDesigns.forEach((url, i) => {
-        html += `<div class="design-card">
-          <img src="${url}" alt="Sample Design ${i+1}" loading="lazy">
-        </div>`;
+      sampleDesigns.forEach(d => {
+        html += `<a href="design-details.html?push=${d.id}" class="design-card-link">
+          <div class="design-card">
+            <img src="${d.imageUrl}" alt="${d.title}" loading="lazy">
+          </div>
+        </a>`;
       });
       designContainer.innerHTML = html;
       
       // Cache sample designs
-      const sampleDesignsObj = sampleDesigns.map((url, i) => ({
-        imageUrl: url,
-        title: `Sample Design ${i+1}`
-      }));
-      sessionStorage.setItem('rehabace_designs', JSON.stringify(sampleDesignsObj));
+      sessionStorage.setItem('rehabace_designs', JSON.stringify(sampleDesigns));
     }
     
     if (productGrid && productGrid.children.length === 0) {
@@ -473,7 +591,7 @@
       
       let html = '';
       sampleProducts.forEach(p => {
-        html += `<a href="display.html?productId=${p.id}" class="product-card">
+        html += `<a href="display.html?push=${p.id}" class="product-card">
           <img src="${p.img}" alt="${p.title}" loading="lazy">
           <div class="product-info">
             <div class="product-title">${p.title}</div>
