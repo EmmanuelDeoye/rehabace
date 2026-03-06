@@ -15,27 +15,40 @@
     <link rel="icon" href="assets/img/logo.png">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-container">
-            <div class="logo">REHAB<span class="ace">ACE</span></div>
-            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav class="main-nav" id="mainNav">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="designs.html" class="active">Designs</a></li>
-                    <li><a href="marketplace.html">Marketplace</a></li>
-                    <li><a href="#signup">Sign Up</a></li>
-                </ul>
-                <div class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-sun"></i>
-                    <i class="fas fa-moon"></i>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <!-- STICKY HEADER -->
+  <!-- Updated header section -->
+<header class="site-header">
+  <div class="container header-container">
+    <div class="logo">REHAB<span class="ace">ACE</span></div>
+    
+    <!-- Right side: cart, theme toggle, mobile menu button -->
+    
+    
+    <!-- Navigation (desktop: inline, mobile: slide-out) -->
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#designs">Designs</a></li>
+        <li><a href="#marketplace">Marketplace</a></li>
+        <li><a href="#signup">Sign Up</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      
+      <!-- Theme Toggle (single icon) -->
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i> <!-- will switch to moon in dark mode -->
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</header>
 
     <main class="design-details-main">
         <div class="container">
