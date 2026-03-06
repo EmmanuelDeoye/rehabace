@@ -25,48 +25,51 @@
     </div>
 
     
-    <!-- REHABACE STICKY HEADER (matching home page) -->
+    <!-- Updated header section -->
 <header class="site-header">
-    <div class="container header-container">
-        <div class="logo">REHAB<span class="ace">ACE</span></div>
-        
-        <!-- Cart Icon - Moved before mobile menu toggle -->
-        <div class="header-actions">
-            <div class="cart-icon-container" id="cart-icon-container">
-                <div class="icon-circle">
-                    <i class='bx bx-cart'></i>
-                    <span id="cart-count" class="cart-badge">0</span>
-                </div>
-            </div>
-            
-            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
-                <i class="fas fa-bars"></i>
-            </button>
+  <div class="container header-container">
+    <div class="logo">REHAB<span class="ace">ACE</span></div>
+    
+    <!-- Right side: cart, theme toggle, mobile menu button -->
+    
+    
+    <!-- Navigation (desktop: inline, mobile: slide-out) -->
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#designs">Designs</a></li>
+        <li><a href="#marketplace">Marketplace</a></li>
+        <li><a href="#signup">Sign Up</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <!-- Cart Icon -->
+      <div class="cart-icon-container" id="cart-icon-container">
+        <div class="icon-circle">
+          <i class='bx bx-cart'></i>
+          <span id="cart-count" class="cart-badge">0</span>
         </div>
-        
-        <nav class="main-nav" id="mainNav">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#about">About Us</a></li>
-                <li><a href="design.html">Designs</a></li>
-                <li><a href="marketplace.html" class="active">Marketplace</a></li>
-                <li><a href="professionals.html">Professionals</a></li>
-                <li><a href="centers.html">Centers</a></li>
-                <li id="my-profile-nav-item" style="display: none;"><a href="users.html">My Profile</a></li>
-            </ul>
-            <div class="nav-actions">
-                <!-- Theme Toggle -->
-                <div class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-sun"></i>
-                    <i class="fas fa-moon"></i>
-                </div>
-                
-                <!-- Auth Button -->
-                <button id="login-btn" class="auth-btn">Login</button>
-            </div>
-        </nav>
+      </div>
+      
+      <!-- Theme Toggle (single icon) -->
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i> <!-- will switch to moon in dark mode -->
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
+  </div>
 </header>
+
+  <!-- OVERLAY FOR MOBILE NAV -->
+  <div class="nav-overlay" id="navOverlay"></div>
+  
+  
     <main>
         <!-- Hero Section for Marketplace -->
         
@@ -283,7 +286,7 @@
     <script src="assets/js/configuration.js"></script>
     <script src="assets/js/home.js"></script>
     <script src="assets/js/marketplace.js"></script>
-    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/auth2.js"></script>
     <script src="assets/js/cart.js"></script>
 </body>
 </html>

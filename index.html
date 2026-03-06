@@ -4,37 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REHABACE · healing spaces</title>
+  <meta name="description" content="RehabAce designs and builds healing spaces, sensory rooms, and provides rehabilitation equipment for therapy centers, hospitals and schools in Nigeria.">
+<meta name="keywords" content="rehab equipment nigeria, sensory room design, therapy room design, rehabilitation furniture, physiotherapy equipment, rehab center interior">
+<meta name="author" content="RehabAce">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="REHABACE - Healing Spaces That Transform Lives">
+<meta property="og:description" content="We design healing spaces, sensory rooms and provide rehab equipment for therapy centers and schools.">
+<meta property="og:url" content="https://rehabace.com">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://rehabace.com/assets/img/logo.jpg">
   <!-- fonts & icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
   <link rel="stylesheet" href="assets/css/home.css">
   <link rel="stylesheet" href="assets/css/design.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
 </head>
 <body>
   <!-- STICKY HEADER -->
-  <header class="site-header">
-    <div class="container header-container">
-      <div class="logo">REHAB<span class="ace">ACE</span></div>
+  <!-- Updated header section -->
+<header class="site-header">
+  <div class="container header-container">
+    <div class="logo">REHAB<span class="ace">ACE</span></div>
+    
+    <!-- Right side: cart, theme toggle, mobile menu button -->
+    
+    
+    <!-- Navigation (desktop: inline, mobile: slide-out) -->
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#designs">Designs</a></li>
+        <li><a href="#marketplace">Marketplace</a></li>
+        <li><a href="#signup">Sign Up</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <!-- Cart Icon -->
+      <div class="cart-icon-container" id="cart-icon-container">
+        <div class="icon-circle">
+          <i class='bx bx-cart'></i>
+          <span id="cart-count" class="cart-badge">0</span>
+        </div>
+      </div>
+      
+      <!-- Theme Toggle (single icon) -->
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i> <!-- will switch to moon in dark mode -->
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
       <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
         <i class="fas fa-bars"></i>
       </button>
-      <nav class="main-nav" id="mainNav">
-        <ul>
-          <li><a href="#hero">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#designs">Designs</a></li>
-          <li><a href="#marketplace">Marketplace</a></li>
-          <li><a href="#signup">Sign Up</a></li>
-        </ul>
-        <div class="theme-toggle" id="themeToggle">
-          <i class="fas fa-sun"></i>
-          <i class="fas fa-moon"></i>
-        </div>
-      </nav>
     </div>
-  </header>
+  </div>
+</header>
+
+  <!-- OVERLAY FOR MOBILE NAV -->
+  <div class="nav-overlay" id="navOverlay"></div>
 
   <main>
     <!-- HERO with typewriter & floating blobs -->
@@ -77,7 +112,7 @@
         </div>
       </div>
       
-      <a href="design.html"><button id="view-more-profile">Explore More designs</button></a>
+      <a href="marketplace.html"><button id="view-more-profile">View More</button></a>
     </section>
 
     <!-- TESTIMONIALS -->
@@ -94,7 +129,7 @@
     <section id="about" class="about-section">
       <div class="container about-grid">
         <div class="about-image">
-          <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=600&auto=format&fit=crop" alt="therapy room interior" loading="lazy">
+          <img src="assets/img/about.png" alt="therapy room interior" loading="lazy">
         </div>
         <div class="about-text">
           <h2>About Rehabace</h2>
@@ -116,6 +151,91 @@
         <div class="faq-list" id="faqList"></div>
       </div>
     </section>
+  </main>
+  
+  
+
+  <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <span class="close-cart">&times;</span>
+            </div>
+            <div id="cart-items-container" class="cart-items-container"></div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total-price">₦0.00</span>
+                </div>
+                <button id="checkout-btn" class="checkout-btn">Checkout via Paystack</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-form="login">Login</div>
+                <div class="auth-tab" data-form="register">Register</div>
+            </div>
+
+            <form id="login-form" class="auth-form active">
+                <div class="error-message" id="login-error"></div>
+                <div class="form-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <span class="password-toggle" id="login-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="forgot-password.html">Forgot your password?</a>
+                </div>
+                
+                <div class="form-group terms-agreement">
+                    <label>By clicking login, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy policy</a></label>
+                </div>
+                
+                <button type="submit">Login</button>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="show-register">Register</a>
+                </div>
+            </form>
+
+            <form id="register-form" class="auth-form">
+                <div class="error-message" id="register-error"></div>
+                <div class="form-group">
+                    <input type="text" id="register-name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="register-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="register-password" placeholder="Password (min. 6 characters)" required>
+                    <span class="password-toggle" id="register-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="form-group terms-agreement">
+                    <label>By clicking register, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy policy</a></label>
+                </div>
+                
+                <button type="submit">Create Account</button>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="show-login">Login</a>
+                </div>
+                <div id="auth-spinner" class="spinner" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+    
   </main>
 
   <!-- FLOATING BOUNCING BUTTON (whatsapp) -->
@@ -177,10 +297,13 @@
     </footer>
 
   <!-- FIREBASE + config + main js -->
+   <script src="https://js.paystack.co/v1/inline.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <!-- configuration.js is expected to initialize firebase (assume it exists) -->
   <script src="assets/js/configuration.js"></script>
   <script src="assets/js/home.js"></script>
+  <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
 </body>
 </html>
