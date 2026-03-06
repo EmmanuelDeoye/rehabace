@@ -1,4 +1,4 @@
-// assets/js/design-details.js - Full updated version with fixed full-image modal
+// assets/js/design-details.js - Updated with adaptive consultation forms
 document.addEventListener('DOMContentLoaded', function() {
     // Check Firebase
     if (typeof firebase === 'undefined' || typeof database === 'undefined') {
@@ -27,10 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Get design ID from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const designId = urlParams.get('id');
+    const designId = urlParams.get('push') || urlParams.get('id');
     
     // Store current design data
     let currentDesign = null;
+    let allDesigns = []; // Store all designs for related section
     
     // Initialize
     function init() {
@@ -47,9 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadDesignDetails(designId) {
         showLoading();
         
-        designsRef.child(designId).once('value')
+        designsRef.once('value')
             .then(snapshot => {
-                const designData = snapshot.val();
+                const designs = [];
+                snapshot.forEach(child => {
+                    designs.push({
+                        id: child.key,
+                        ...child.val()
+                    });
+                });
+                
+                allDesigns = designs;
+                
+                const designData = designs.find(d => d.id === designId);
                 
                 if (designData) {
                     currentDesign = {
@@ -57,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         ...designData
                     };
                     renderDesignDetails(currentDesign);
+                    
+                    // Load related designs after main content
+                    renderRelatedDesigns(currentDesign);
                 } else {
                     showError();
                 }
@@ -84,6 +98,9 @@ document.addEventListener('DOMContentLoaded', function() {
             allImages.push(design.imageUrl);
         }
         
+        // Format description with paragraphs
+        const formattedDescription = formatDescription(design.description || 'No description available.');
+        
         designDetails.innerHTML = `
             <div class="design-details-loaded">
                 <div class="slideshow-container" id="slideshow-container">
@@ -102,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="design-info">
                     <div>
                         <h1 class="design-title-large">${design.title || 'Design Idea'}</h1>
-                        <p class="design-description-full">${design.description || 'No description available.'}</p>
+                        <div class="design-description-full">${formattedDescription}</div>
                         
                         <div class="design-meta-details">
                             ${design.category ? `
@@ -111,14 +128,35 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <span class="meta-value">${formatCategory(design.category)}</span>
                                 </div>
                             ` : ''}
-                            <!-- Time removed, only category displayed -->
+                            ${design.area ? `
+                                <div class="meta-item">
+                                    <span class="meta-label">Area</span>
+                                    <span class="meta-value">${design.area} m²</span>
+                                </div>
+                            ` : ''}
+                            ${design.features && design.features.length ? `
+                                <div class="meta-item features-item">
+                                    <span class="meta-label">Features</span>
+                                    <div class="feature-tags">
+                                        ${design.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                     
                     <button class="consult-button" id="consult-now-btn">
-                        <i class='bx bxl-whatsapp'></i>
-                        Consult About This Design
+                        
+                        I want this ${getItemType(design.category)} template
                     </button>
+                </div>
+            </div>
+            
+            <!-- Related Designs Section -->
+            <div class="related-designs-section" id="related-designs-section">
+                <h2 class="section-title">Related Designs</h2>
+                <div class="related-designs-scroll" id="related-designs-scroll">
+                    <div class="loading-placeholder">Loading related designs...</div>
                 </div>
             </div>
         `;
@@ -132,6 +170,129 @@ document.addEventListener('DOMContentLoaded', function() {
         // Attach consult button listener
         document.getElementById('consult-now-btn').addEventListener('click', () => {
             openConsultModal(design);
+        });
+    }
+    
+    // Get item type for button text
+    function getItemType(category) {
+        const typeMap = {
+            'sensory': 'Sensory Room',
+            'creche': 'Creche Room',
+            'rehab centers': 'Rehab Center',
+            'treatment spaces': 'Treatment Space',
+            'educational spaces': 'Educational Space',
+            'playground': 'Playground',
+            'gym': 'Gym Space',
+            'rehab equipment': 'Equipment'
+        };
+        return typeMap[category] || 'Design';
+    }
+    
+    // Format description with proper paragraphs
+    function formatDescription(description) {
+        if (!description) return '<p>No description available.</p>';
+        
+        // Check if description already contains HTML paragraphs
+        if (description.includes('<p>')) {
+            return description;
+        }
+        
+        // Split by double line breaks or single line breaks and wrap in <p> tags
+        const paragraphs = description.split(/\n\s*\n/);
+        
+        if (paragraphs.length > 1) {
+            // Multiple paragraphs separated by blank lines
+            return paragraphs.map(p => p.trim()).filter(p => p.length > 0)
+                .map(p => `<p>${p}</p>`).join('');
+        } else {
+            // Single paragraph - split by single line breaks for multiple lines
+            const lines = description.split('\n').filter(line => line.trim().length > 0);
+            
+            if (lines.length > 1) {
+                return lines.map(line => `<p>${line}</p>`).join('');
+            } else {
+                return `<p>${description}</p>`;
+            }
+        }
+    }
+    
+    // Render related designs as horizontal scroll
+    function renderRelatedDesigns(currentDesign) {
+        const relatedSection = document.getElementById('related-designs-section');
+        const relatedScroll = document.getElementById('related-designs-scroll');
+        
+        if (!relatedScroll || !currentDesign) return;
+        
+        // Get designs from same category, excluding current design
+        let related = allDesigns.filter(design => 
+            design.id !== currentDesign.id && 
+            design.category === currentDesign.category
+        );
+        
+        // If not enough in same category, add other designs
+        if (related.length < 4) {
+            const others = allDesigns.filter(design => 
+                design.id !== currentDesign.id && 
+                design.category !== currentDesign.category
+            );
+            related = [...related, ...others].slice(0, 4);
+        }
+        
+        // Limit to 4 designs
+        related = related.slice(0, 4);
+        
+        if (related.length === 0) {
+            // Hide section if no related designs
+            if (relatedSection) relatedSection.style.display = 'none';
+            return;
+        }
+        
+        let html = '';
+        related.forEach(design => {
+            const imageUrl = design.imageUrl || 'https://via.placeholder.com/300x200?text=Design';
+            html += `
+                <a href="design-details.html?id=${design.id}" class="related-design-card">
+                    <div class="related-design-image">
+                        <img src="${imageUrl}" alt="${design.title || 'Design'}" loading="lazy">
+                    </div>
+                    <div class="related-design-info">
+                        <h3 class="related-design-title">${design.title || 'Untitled Design'}</h3>
+                        <span class="related-design-category">${formatCategory(design.category)}</span>
+                    </div>
+                </a>
+            `;
+        });
+        
+        relatedScroll.innerHTML = html;
+        
+        // Add drag-to-scroll functionality
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        relatedScroll.addEventListener('mousedown', (e) => {
+            isDown = true;
+            relatedScroll.classList.add('active');
+            startX = e.pageX - relatedScroll.offsetLeft;
+            scrollLeft = relatedScroll.scrollLeft;
+        });
+        
+        relatedScroll.addEventListener('mouseleave', () => {
+            isDown = false;
+            relatedScroll.classList.remove('active');
+        });
+        
+        relatedScroll.addEventListener('mouseup', () => {
+            isDown = false;
+            relatedScroll.classList.remove('active');
+        });
+        
+        relatedScroll.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - relatedScroll.offsetLeft;
+            const walk = (x - startX) * 2;
+            relatedScroll.scrollLeft = scrollLeft - walk;
         });
     }
     
@@ -347,43 +508,299 @@ document.addEventListener('DOMContentLoaded', function() {
         roomSizesContainer.innerHTML = html;
     }
     
+    // Generate category-specific form fields
+    function generateCategoryForm(category) {
+        let html = '';
+        
+        switch(category) {
+            case 'sensory':
+            case 'rehab centers':
+            case 'treatment spaces':
+                // Keep existing room-based form for these categories
+                html = `
+                    <div class="consult-form-group">
+                        <label for="rooms-count">Number of Rooms/Spaces *</label>
+                        <input type="number" id="rooms-count" min="1" value="1" required>
+                    </div>
+                    
+                    <div id="room-sizes-container">
+                        <!-- Room size inputs will be dynamically added here -->
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="budget-type">Budget Type *</label>
+                        <select id="budget-type" required>
+                            <option value="">Select budget level</option>
+                            <option value="budget">Budget Friendly</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="exclusive">Exclusive</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'creche':
+            case 'educational spaces':
+                html = `
+                    <div class="consult-form-group">
+                        <label for="children-count">Number of Children *</label>
+                        <input type="number" id="children-count" min="1" value="15" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="age-group">Age Group *</label>
+                        <select id="age-group" required>
+                            <option value="">Select age group</option>
+                            <option value="infants">Infants (0-2 years)</option>
+                            <option value="toddlers">Toddlers (2-4 years)</option>
+                            <option value="preschool">Preschool (4-6 years)</option>
+                            <option value="school">School Age (6-12 years)</option>
+                            <option value="mixed">Mixed Ages</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="space-size">Space Size (sqm) *</label>
+                        <input type="number" id="space-size" min="10" value="50" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="budget-type">Budget Type *</label>
+                        <select id="budget-type" required>
+                            <option value="">Select budget level</option>
+                            <option value="budget">Budget Friendly</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="exclusive">Exclusive</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'playground':
+                html = `
+                    <div class="consult-form-group">
+                        <label for="area-size">Area Size (sqm) *</label>
+                        <input type="number" id="area-size" min="20" value="100" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="playground-type">Playground Type *</label>
+                        <select id="playground-type" required>
+                            <option value="">Select type</option>
+                            <option value="indoor">Indoor Playground</option>
+                            <option value="outdoor">Outdoor Playground</option>
+                            <option value="rooftop">Rooftop Play Area</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="age-range">Target Age Range *</label>
+                        <select id="age-range" required>
+                            <option value="">Select age range</option>
+                            <option value="toddler">Toddlers (1-4 years)</option>
+                            <option value="children">Children (4-12 years)</option>
+                            <option value="all">All Ages</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="budget-type">Budget Type *</label>
+                        <select id="budget-type" required>
+                            <option value="">Select budget level</option>
+                            <option value="budget">Budget Friendly</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="exclusive">Exclusive</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'gym':
+                html = `
+                    <div class="consult-form-group">
+                        <label for="gym-size">Gym Size (sqm) *</label>
+                        <input type="number" id="gym-size" min="30" value="100" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="gym-type">Gym Type *</label>
+                        <select id="gym-type" required>
+                            <option value="">Select type</option>
+                            <option value="commercial">Commercial Gym</option>
+                            <option value="home">Home Gym</option>
+                            <option value="rehab">Rehabilitation Gym</option>
+                            <option value="hotel">Hotel/Resort Gym</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="equipment-level">Equipment Level *</label>
+                        <select id="equipment-level" required>
+                            <option value="">Select level</option>
+                            <option value="basic">Basic (Cardio + Free Weights)</option>
+                            <option value="moderate">Moderate (Full Circuit)</option>
+                            <option value="premium">Premium (Full Commercial)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="budget-type">Budget Type *</label>
+                        <select id="budget-type" required>
+                            <option value="">Select budget level</option>
+                            <option value="budget">Budget Friendly</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="exclusive">Exclusive</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'rehab equipment':
+                html = `
+                    <div class="consult-form-group">
+                        <label for="equipment-quantity">Quantity Needed *</label>
+                        <input type="number" id="equipment-quantity" min="1" value="1" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="equipment-type">Equipment Type *</label>
+                        <select id="equipment-type" required>
+                            <option value="">Select type</option>
+                            <option value="therapy">Therapy Equipment</option>
+                            <option value="sensory">Sensory Equipment</option>
+                            <option value="mobility">Mobility Aids</option>
+                            <option value="exercise">Exercise Equipment</option>
+                            <option value="assessment">Assessment Tools</option>
+                        </select>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="delivery-location">Delivery Location *</label>
+                        <input type="text" id="delivery-location" placeholder="City/State" required>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="installation-needed">Installation Needed? *</label>
+                        <select id="installation-needed" required>
+                            <option value="yes">Yes, need installation</option>
+                            <option value="no">No, self-installation</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            default:
+                // Generic form for any other categories
+                html = `
+                    <div class="consult-form-group">
+                        <label for="project-details">Project Details *</label>
+                        <textarea id="project-details" rows="3" placeholder="Please describe what you need..." required></textarea>
+                    </div>
+                    
+                    <div class="consult-form-group">
+                        <label for="budget-type">Budget Type *</label>
+                        <select id="budget-type" required>
+                            <option value="">Select budget level</option>
+                            <option value="budget">Budget Friendly</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="exclusive">Exclusive</option>
+                        </select>
+                    </div>
+                `;
+        }
+        
+        return html;
+    }
+    
     // Open consultation modal
     function openConsultModal(design) {
         if (!consultModal) return;
         
-        consultDesignTitle.textContent = `Design: ${design.title || 'Unnamed'}`;
+        consultDesignTitle.textContent = `${design.title || 'Design'} - ${formatCategory(design.category)}`;
         
         // Set min date to today
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('inspection-date').min = today;
         
-        // Reset form
-        consultForm.reset();
-        roomsCount.value = 1;
-        generateRoomSizeInputs();
+        // Clear existing form content except header
+        const formHeader = consultForm.querySelector('h2');
+        const formChildren = consultForm.children;
         
-        // Add image upload field if not exists
-        if (!document.getElementById('room-images')) {
-            const imageUploadHtml = `
-                <div class="consult-form-group">
-                    <label for="room-images">Upload Room Photos (Optional)</label>
-                    <input type="file" id="room-images" accept="image/*" multiple>
-                    <small class="form-text">You can upload multiple photos of your space</small>
-                    <div id="image-preview-container" class="image-preview-grid"></div>
-                </div>
-            `;
-            
-            // Insert before the last form group or at the end
-            const formGroups = consultForm.querySelectorAll('.consult-form-group');
-            if (formGroups.length > 0) {
-                formGroups[formGroups.length - 1].insertAdjacentHTML('beforebegin', imageUploadHtml);
-            } else {
-                consultForm.insertAdjacentHTML('beforeend', imageUploadHtml);
-            }
-            
-            // Add image preview functionality
-            setupImageUploadPreview();
+        // Keep only the title and first paragraph, remove everything else
+        while (consultForm.children.length > 2) {
+            consultForm.removeChild(consultForm.lastChild);
         }
+        
+        // Get current page URL to include in submission
+        const currentPageUrl = window.location.href;
+        
+        // Generate category-specific form fields
+        const categoryFormFields = generateCategoryForm(design.category);
+        
+        // Add the new form fields
+        consultForm.insertAdjacentHTML('beforeend', categoryFormFields);
+        
+        // Add common fields for all categories
+        consultForm.insertAdjacentHTML('beforeend', `
+            <div class="consult-form-group">
+                <label for="inspection-date">Preferred Consultation/Inspection Date *</label>
+                <input type="date" id="inspection-date" min="${today}" required>
+            </div>
+            
+            <div class="consult-form-group">
+                <label for="site-address">Location/Address *</label>
+                <textarea id="site-address" rows="2" placeholder="Full address" required></textarea>
+            </div>
+            
+            <div class="consult-form-group">
+                <label for="phone-number">Phone Number *</label>
+                <input type="tel" id="phone-number" placeholder="e.g. 2348123456789" required>
+            </div>
+            
+            <div class="consult-form-group">
+                <label for="email-optional">Email (Optional)</label>
+                <input type="email" id="email-optional" placeholder="your@email.com">
+            </div>
+            
+            <div class="consult-form-group">
+                <label for="additional-notes">Additional Notes (Optional)</label>
+                <textarea id="additional-notes" rows="2" placeholder="Any specific requirements?"></textarea>
+            </div>
+            
+            <!-- Hidden field to store page URL -->
+            <input type="hidden" id="page-url" value="${currentPageUrl}">
+            
+            <div class="consult-form-group">
+                <label for="room-images">Upload Photos/Reference Images (Optional)</label>
+                <input type="file" id="room-images" accept="image/*" multiple>
+                <small class="form-text">You can upload multiple photos to help us understand your needs</small>
+                <div id="image-preview-container" class="image-preview-grid"></div>
+            </div>
+            
+            <div class="consult-form-actions">
+                <button type="submit" class="btn btn-primary" id="submit-consult">
+                    <i class='bx bx-check'></i> Confirm Booking
+                </button>
+            </div>
+            <div id="consult-spinner" class="spinner" style="display: none;"></div>
+        `);
+        
+        // If category is sensory/rehab, initialize room size inputs
+        if (design.category === 'sensory' || design.category === 'rehab centers' || design.category === 'treatment spaces') {
+            const newRoomsCount = document.getElementById('rooms-count');
+            const newRoomSizesContainer = document.getElementById('room-sizes-container');
+            
+            if (newRoomsCount && newRoomSizesContainer) {
+                // Re-attach event listeners
+                newRoomsCount.addEventListener('change', generateRoomSizeInputs);
+                newRoomsCount.addEventListener('input', generateRoomSizeInputs);
+                
+                // Generate initial room size inputs
+                generateRoomSizeInputs();
+            }
+        }
+        
+        // Add image preview functionality
+        setupImageUploadPreview();
         
         consultModal.style.display = 'flex';
     }
@@ -394,22 +811,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewContainer = document.getElementById('image-preview-container');
         
         if (fileInput && previewContainer) {
-            fileInput.addEventListener('change', function() {
-                previewContainer.innerHTML = '';
-                
-                if (this.files) {
-                    Array.from(this.files).forEach(file => {
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                const preview = document.createElement('div');
-                                preview.className = 'image-preview-item';
-                                preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                                previewContainer.appendChild(preview);
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    });
+            // Remove existing listener to avoid duplicates
+            fileInput.removeEventListener('change', handleImagePreview);
+            fileInput.addEventListener('change', handleImagePreview);
+        }
+    }
+    
+    function handleImagePreview() {
+        const previewContainer = document.getElementById('image-preview-container');
+        if (!previewContainer) return;
+        
+        previewContainer.innerHTML = '';
+        
+        if (this.files) {
+            Array.from(this.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.className = 'image-preview-item';
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        previewContainer.appendChild(preview);
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
         }
@@ -429,44 +853,185 @@ document.addEventListener('DOMContentLoaded', function() {
         const spinner = document.getElementById('consult-spinner');
         const submitBtn = document.getElementById('submit-consult');
         
-        // Collect room sizes
-        const roomSizeSelects = document.querySelectorAll('.room-size-select');
-        const roomSizes = [];
-        roomSizeSelects.forEach(select => {
-            roomSizes.push(select.value);
-        });
-        
-        // Validate room sizes
-        if (roomSizes.includes('')) {
-            alert('Please select size for all rooms');
+        if (!currentDesign) {
+            alert('Design data not loaded');
             return;
         }
         
-        // Get file input
-        const fileInput = document.getElementById('room-images');
-        const hasImages = fileInput && fileInput.files.length > 0;
-        
-        // Collect form data
-        const bookingData = {
+        // Collect common form data
+        const formData = {
             designId: designId,
-            designTitle: currentDesign ? currentDesign.title : '',
-            roomsCount: roomsCount.value,
-            roomSizes: roomSizes,
-            budgetType: document.getElementById('budget-type').value,
-            inspectionDate: document.getElementById('inspection-date').value,
-            siteAddress: document.getElementById('site-address').value,
-            phoneNumber: document.getElementById('phone-number').value,
-            email: document.getElementById('email-optional').value || '',
-            hasImages: hasImages ? fileInput.files.length : 0,
+            designTitle: currentDesign.title || 'Untitled',
+            designCategory: currentDesign.category || 'general',
+            pageUrl: document.getElementById('page-url')?.value || window.location.href,
+            inspectionDate: document.getElementById('inspection-date')?.value || '',
+            siteAddress: document.getElementById('site-address')?.value || '',
+            phoneNumber: document.getElementById('phone-number')?.value || '',
+            email: document.getElementById('email-optional')?.value || '',
+            additionalNotes: document.getElementById('additional-notes')?.value || '',
             timestamp: Date.now(),
             status: 'pending'
         };
         
-        // Validate required fields
-        if (!bookingData.budgetType || !bookingData.inspectionDate || !bookingData.siteAddress || !bookingData.phoneNumber) {
+        // Validate common required fields
+        if (!formData.inspectionDate || !formData.siteAddress || !formData.phoneNumber) {
             alert('Please fill all required fields');
             return;
         }
+        
+        // Collect category-specific data
+        const category = currentDesign.category;
+        let categoryData = {};
+        let messageDetails = '';
+        
+        switch(category) {
+            case 'sensory':
+            case 'rehab centers':
+            case 'treatment spaces':
+                // Get room count and sizes
+                const roomsCount = document.getElementById('rooms-count')?.value;
+                const roomSizeSelects = document.querySelectorAll('.room-size-select');
+                const roomSizes = [];
+                roomSizeSelects.forEach(select => {
+                    roomSizes.push(select.value);
+                });
+                
+                if (roomSizes.includes('')) {
+                    alert('Please select size for all rooms');
+                    return;
+                }
+                
+                categoryData = {
+                    roomsCount: roomsCount,
+                    roomSizes: roomSizes,
+                    budgetType: document.getElementById('budget-type')?.value || ''
+                };
+                
+                if (!categoryData.budgetType) {
+                    alert('Please select budget type');
+                    return;
+                }
+                
+                const sizeMap = {
+                    'small': 'Small (10-15 sqm)',
+                    'medium': 'Medium (16-30 sqm)',
+                    'large': 'Large (31-50 sqm)',
+                    'xlarge': 'Extra Large (50+ sqm)'
+                };
+                
+                messageDetails = `
+Rooms: ${categoryData.roomsCount}
+Room Sizes: ${categoryData.roomSizes.map(s => sizeMap[s] || s).join(', ')}
+Budget: ${categoryData.budgetType}`;
+                break;
+                
+            case 'creche':
+            case 'educational spaces':
+                categoryData = {
+                    childrenCount: document.getElementById('children-count')?.value,
+                    ageGroup: document.getElementById('age-group')?.value,
+                    spaceSize: document.getElementById('space-size')?.value,
+                    budgetType: document.getElementById('budget-type')?.value
+                };
+                
+                if (!categoryData.childrenCount || !categoryData.ageGroup || !categoryData.spaceSize || !categoryData.budgetType) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                messageDetails = `
+Children Count: ${categoryData.childrenCount}
+Age Group: ${categoryData.ageGroup}
+Space Size: ${categoryData.spaceSize} sqm
+Budget: ${categoryData.budgetType}`;
+                break;
+                
+            case 'playground':
+                categoryData = {
+                    areaSize: document.getElementById('area-size')?.value,
+                    playgroundType: document.getElementById('playground-type')?.value,
+                    ageRange: document.getElementById('age-range')?.value,
+                    budgetType: document.getElementById('budget-type')?.value
+                };
+                
+                if (!categoryData.areaSize || !categoryData.playgroundType || !categoryData.ageRange || !categoryData.budgetType) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                messageDetails = `
+Area Size: ${categoryData.areaSize} sqm
+Playground Type: ${categoryData.playgroundType}
+Age Range: ${categoryData.ageRange}
+Budget: ${categoryData.budgetType}`;
+                break;
+                
+            case 'gym':
+                categoryData = {
+                    gymSize: document.getElementById('gym-size')?.value,
+                    gymType: document.getElementById('gym-type')?.value,
+                    equipmentLevel: document.getElementById('equipment-level')?.value,
+                    budgetType: document.getElementById('budget-type')?.value
+                };
+                
+                if (!categoryData.gymSize || !categoryData.gymType || !categoryData.equipmentLevel || !categoryData.budgetType) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                messageDetails = `
+Gym Size: ${categoryData.gymSize} sqm
+Gym Type: ${categoryData.gymType}
+Equipment Level: ${categoryData.equipmentLevel}
+Budget: ${categoryData.budgetType}`;
+                break;
+                
+            case 'rehab equipment':
+                categoryData = {
+                    quantity: document.getElementById('equipment-quantity')?.value,
+                    equipmentType: document.getElementById('equipment-type')?.value,
+                    deliveryLocation: document.getElementById('delivery-location')?.value,
+                    installationNeeded: document.getElementById('installation-needed')?.value
+                };
+                
+                if (!categoryData.quantity || !categoryData.equipmentType || !categoryData.deliveryLocation || !categoryData.installationNeeded) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                messageDetails = `
+Quantity: ${categoryData.quantity}
+Equipment Type: ${categoryData.equipmentType}
+Delivery Location: ${categoryData.deliveryLocation}
+Installation Needed: ${categoryData.installationNeeded === 'yes' ? 'Yes' : 'No'}`;
+                break;
+                
+            default:
+                categoryData = {
+                    projectDetails: document.getElementById('project-details')?.value,
+                    budgetType: document.getElementById('budget-type')?.value
+                };
+                
+                if (!categoryData.projectDetails || !categoryData.budgetType) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                messageDetails = `
+Project Details: ${categoryData.projectDetails}
+Budget: ${categoryData.budgetType}`;
+        }
+        
+        // Combine all data
+        const bookingData = {
+            ...formData,
+            ...categoryData
+        };
+        
+        // Get file input
+        const fileInput = document.getElementById('room-images');
+        const hasImages = fileInput && fileInput.files.length > 0;
+        bookingData.hasImages = hasImages ? fileInput.files.length : 0;
         
         // Show loading
         spinner.style.display = 'inline-block';
@@ -475,27 +1040,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Save to Firebase
         bookingsRef.push(bookingData)
             .then(() => {
-                // Prepare WhatsApp message with image note
-                let message = `Hello REHABACE! I just booked a consultation for "${bookingData.designTitle}". 
+                // Prepare WhatsApp message
+                let message = `Hello REHABACE! I'm interested in "${bookingData.designTitle}" (${formatCategory(bookingData.designCategory)}).
                 
-Rooms: ${bookingData.roomsCount}
-Room Sizes: ${roomSizes.map(s => {
-    const sizeMap = {
-        'small': 'Small (10-15 sqm)',
-        'medium': 'Medium (16-30 sqm)',
-        'large': 'Large (31-50 sqm)',
-        'xlarge': 'Extra Large (50+ sqm)'
-    };
-    return sizeMap[s] || s;
-}).join(', ')}
-Budget: ${bookingData.budgetType.charAt(0).toUpperCase() + bookingData.budgetType.slice(1)}
+View this page: ${bookingData.pageUrl}
+
+${messageDetails}
+
 Preferred Date: ${bookingData.inspectionDate}
 Location: ${bookingData.siteAddress}
 Phone: ${bookingData.phoneNumber}
 Email: ${bookingData.email || 'Not provided'}`;
                 
+                if (bookingData.additionalNotes) {
+                    message += `\n\nAdditional Notes: ${bookingData.additionalNotes}`;
+                }
+                
                 if (hasImages) {
-                    message += `\n\nI've uploaded ${fileInput.files.length} photo(s) of my space. Please check the booking dashboard.`;
+                    message += `\n\nI've uploaded ${fileInput.files.length} photo(s) of my space/requirements. Please check the booking dashboard.`;
                 }
                 
                 const whatsappUrl = `https://wa.me/2348132912880?text=${encodeURIComponent(message)}`;
@@ -505,7 +1067,7 @@ Email: ${bookingData.email || 'Not provided'}`;
                 closeModal();
                 
                 // Show success message
-                alert('Booking confirmed! You will be redirected to WhatsApp.');
+                alert('Consultation request submitted! You will be redirected to WhatsApp.');
             })
             .catch(error => {
                 console.error('Error saving booking:', error);
@@ -522,10 +1084,12 @@ Email: ${bookingData.email || 'Not provided'}`;
         const categoryMap = {
             'sensory': 'Sensory Room',
             'creche': 'Creche Room',
-            'rehab': 'Rehab Center',
-            'therapy': 'Therapy Space',
+            'rehab centers': 'Rehab Center',
             'treatment spaces': 'Treatment Space',
-            'playground': 'Playground'
+            'educational spaces': 'Educational Space',
+            'playground': 'Playground',
+            'gym': 'Gym & Fitness Space',
+            'rehab equipment': 'Rehab Equipment'
         };
         return categoryMap[category] || category;
     }
