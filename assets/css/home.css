@@ -822,7 +822,7 @@ a {
 }
 
 #view-more-profile {
-    background-color: #000000;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 10px 20px;
