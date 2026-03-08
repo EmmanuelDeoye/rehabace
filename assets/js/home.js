@@ -32,7 +32,6 @@
   let touchStartX = 0;
   let touchCurrentX = 0;
   let isDragging = false;
-  let initialNavRight = 0;
   const threshold = 0.4; // 40% drag to close
 
   if (mobileToggle && mainNav && navOverlay) {
@@ -93,7 +92,6 @@
     mainNav.addEventListener('touchstart', (e) => {
       if (!mainNav.classList.contains('active')) return;
       touchStartX = e.touches[0].clientX;
-      initialNavRight = 0; // Nav is at right: 0 when open
       isDragging = true;
       // Temporarily disable transition for smooth drag
       mainNav.style.transition = 'none';
@@ -107,14 +105,11 @@
 
       // Only allow right swipe (to close)
       if (deltaX > 0) {
-        const navWidth = mainNav.offsetWidth;
-        const dragPercent = Math.min(deltaX / navWidth, 1);
-        // Translate nav to the right (move off-screen)
         mainNav.style.transform = `translateX(${deltaX}px)`;
       }
     }, { passive: false });
 
-    mainNav.addEventListener('touchend', (e) => {
+    mainNav.addEventListener('touchend', () => {
       if (!isDragging) return;
       isDragging = false;
 
@@ -375,8 +370,8 @@
     }
   }
 
-  // ------ CACHED DATA FOR DESIGNS AND PRODUCTS ------
-  // Check if we have cached data in sessionStorage
+  // ------ FIXED: CACHED DATA FOR DESIGNS AND PRODUCTS ------
+  // Check if we have cached data in sessionStorage (with error handling for quota)
   const designContainer = document.getElementById('designScroll');
   const productGrid = document.getElementById('productGrid');
   
@@ -394,57 +389,139 @@
   }
 
   function loadCachedData() {
-    // Check sessionStorage for cached designs
-    const cachedDesigns = sessionStorage.getItem('rehabace_designs');
-    if (cachedDesigns && designContainer) {
-      try {
-        const designs = JSON.parse(cachedDesigns);
-        if (designs && designs.length > 0) {
-          let html = '';
-          designs.forEach(d => {
-            const imgUrl = d.imageUrl || 'https://via.placeholder.com/300x200?text=' + encodeURIComponent(d.title || 'Design');
-            const pushId = d.id || d.push || 'sample';
-            html += `<a href="design-details.html?id=${encodeURIComponent(pushId)}" class="design-card-link">
-              <div class="design-card">
-                <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
-              </div>
-            </a>`;
-          });
-          designContainer.innerHTML = html;
-          console.log('Loaded designs from cache');
+    try {
+      // Check sessionStorage for cached designs
+      const cachedDesigns = sessionStorage.getItem('rehabace_designs_light'); // Changed key name
+      if (cachedDesigns && designContainer) {
+        try {
+          const designs = JSON.parse(cachedDesigns);
+          if (designs && designs.length > 0) {
+            renderDesigns(designs);
+            console.log('Loaded designs from cache');
+          }
+        } catch (e) {
+          console.log('Cache parse error for designs');
         }
-      } catch (e) {
-        console.log('Cache read error for designs');
       }
-    }
 
-    // Check sessionStorage for cached products
-    const cachedProducts = sessionStorage.getItem('rehabace_products');
-    if (cachedProducts && productGrid) {
-      try {
-        const products = JSON.parse(cachedProducts);
-        if (products && products.length > 0) {
-          let html = '';
-          products.forEach(p => {
-            const imgUrl = p.img || p.imageUrl || 'https://via.placeholder.com/300?text=' + encodeURIComponent(p.title || 'Product');
-            const pushId = p.push || p.id;
-            const title = p.title || 'Unnamed Product';
-            const price = p.price || 'Price on request';
-            
-            html += `<a href="display.html?push=${encodeURIComponent(pushId)}" class="product-card">
-              <img src="${imgUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-              <div class="product-info">
-                <div class="product-title">${title}</div>
-                <div class="product-price">${price}</div>
-              </div>
-            </a>`;
-          });
-          productGrid.innerHTML = html;
-          console.log('Loaded products from cache');
+      // Check sessionStorage for cached products
+      const cachedProducts = sessionStorage.getItem('rehabace_products_light'); // Changed key name
+      if (cachedProducts && productGrid) {
+        try {
+          const products = JSON.parse(cachedProducts);
+          if (products && products.length > 0) {
+            renderProducts(products);
+            console.log('Loaded products from cache');
+          }
+        } catch (e) {
+          console.log('Cache parse error for products');
         }
-      } catch (e) {
-        console.log('Cache read error for products');
       }
+    } catch (e) {
+      console.log('Cache access error:', e);
+    }
+  }
+
+  // Helper function to render designs (minimal data)
+  function renderDesigns(designs) {
+    if (!designContainer) return;
+    
+    let html = '';
+    designs.forEach(d => {
+      // Use a placeholder if image is too large or missing
+      const imgUrl = d.imageUrl || d.img || 'https://via.placeholder.com/300x200?text=Healing+Space';
+      const pushId = d.id || d.push || 'sample';
+      
+      // Ensure URL is not too long (truncate if needed)
+      const safeImgUrl = imgUrl.length > 500 ? 'https://via.placeholder.com/300x200?text=Image' : imgUrl;
+      
+      html += `<a href="design-details.html?id=${encodeURIComponent(pushId)}" class="design-card-link">
+        <div class="design-card">
+          <img src="${safeImgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+        </div>
+      </a>`;
+    });
+    
+    designContainer.innerHTML = html;
+  }
+
+  // Helper function to render products (minimal data)
+  function renderProducts(products) {
+    if (!productGrid) return;
+    
+    let html = '';
+    products.forEach(p => {
+      const imgUrl = p.img || p.imageUrl || 'https://via.placeholder.com/300?text=' + encodeURIComponent(p.title || 'Product');
+      const pushId = p.push || p.id;
+      const title = p.title || 'Unnamed Product';
+      const price = p.price || 'Price on request';
+      
+      // Ensure URL is not too long
+      const safeImgUrl = imgUrl.length > 500 ? 'https://via.placeholder.com/300?text=Product' : imgUrl;
+      
+      html += `<a href="display.html?push=${encodeURIComponent(pushId)}" class="product-card">
+        <img src="${safeImgUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+        <div class="product-info">
+          <div class="product-title">${title}</div>
+          <div class="product-price">${price}</div>
+        </div>
+      </a>`;
+    });
+    
+    productGrid.innerHTML = html;
+  }
+
+  // Safe cache function with error handling and size limits
+  function safeSetCache(key, data, maxSize = 200 * 1024) { // 200KB limit per key
+    try {
+      // Create a lightweight version of the data
+      const lightData = data.map(item => {
+        // Only keep essential fields, truncate long URLs
+        const lightItem = {
+          id: item.id || item.push || '',
+          title: item.title || '',
+          // Use a placeholder if image is too long
+          imageUrl: item.imageUrl && item.imageUrl.length < 300 ? item.imageUrl : 
+                   (item.img && item.img.length < 300 ? item.img : 'https://via.placeholder.com/300x200')
+        };
+        
+        // Add price for products
+        if (item.price) lightItem.price = item.price;
+        if (item.push) lightItem.push = item.push;
+        
+        return lightItem;
+      });
+      
+      const jsonString = JSON.stringify(lightData);
+      
+      // Check size before storing
+      if (jsonString.length > maxSize) {
+        console.log(`Data too large for cache (${jsonString.length} bytes), skipping`);
+        return false;
+      }
+      
+      sessionStorage.setItem(key, jsonString);
+      return true;
+    } catch (e) {
+      if (e.name === 'QuotaExceededError') {
+        console.log('Storage quota exceeded, clearing old cache and retrying...');
+        // Clear old items and try again
+        try {
+          sessionStorage.removeItem('rehabace_designs');
+          sessionStorage.removeItem('rehabace_products');
+          sessionStorage.removeItem(key);
+          // Try one more time with minimal data
+          const minimalData = data.slice(0, 4).map(item => ({
+            id: item.id || item.push || '',
+            title: (item.title || '').substring(0, 30),
+            imageUrl: 'https://via.placeholder.com/300x200'
+          }));
+          sessionStorage.setItem(key, JSON.stringify(minimalData));
+        } catch (retryError) {
+          console.log('Still unable to cache data');
+        }
+      }
+      return false;
     }
   }
 
@@ -478,22 +555,11 @@
             })
             .slice(0, 10);
           
-          // Save to sessionStorage
-          sessionStorage.setItem('rehabace_designs', JSON.stringify(latest));
+          // Save to sessionStorage with error handling
+          safeSetCache('rehabace_designs_light', latest);
           
           // Update UI
-          let html = '';
-          latest.forEach(d => {
-            const imgUrl = d.imageUrl || 'https://via.placeholder.com/300x200?text=' + encodeURIComponent(d.title || 'Design');
-            const pushId = d.id || d.push || 'sample';
-            html += `<a href="design-details.html?id=${encodeURIComponent(pushId)}" class="design-card-link">
-              <div class="design-card">
-                <img src="${imgUrl}" alt="${d.title || 'Design'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
-              </div>
-            </a>`;
-          });
-          
-          designContainer.innerHTML = html;
+          renderDesigns(latest);
           console.log('Designs updated from Firebase');
         } else {
           showSampleData();
@@ -525,27 +591,11 @@
             })
             .slice(0, 4);
           
-          // Save to sessionStorage
-          sessionStorage.setItem('rehabace_products', JSON.stringify(latest));
+          // Save to sessionStorage with error handling
+          safeSetCache('rehabace_products_light', latest);
           
           // Update UI
-          let html = '';
-          latest.forEach(p => {
-            const imgUrl = p.img || p.imageUrl || 'https://via.placeholder.com/300?text=' + encodeURIComponent(p.title || 'Product');
-            const pushId = p.push || p.id;
-            const title = p.title || 'Unnamed Product';
-            const price = p.price || 'Price on request';
-            
-            html += `<a href="display.html?push=${encodeURIComponent(pushId)}" class="product-card">
-              <img src="${imgUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-              <div class="product-info">
-                <div class="product-title">${title}</div>
-                <div class="product-price">${price}</div>
-              </div>
-            </a>`;
-          });
-          
-          productGrid.innerHTML = html;
+          renderProducts(latest);
           console.log('Products updated from Firebase');
         } else {
           showSampleData();
@@ -567,18 +617,10 @@
         { imageUrl: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=300&h=200&fit=crop&blur=50', title: 'Sensory Room 4', id: 'sample4' }
       ];
       
-      let html = '';
-      sampleDesigns.forEach(d => {
-        html += `<a href="design-details.html?push=${d.id}" class="design-card-link">
-          <div class="design-card">
-            <img src="${d.imageUrl}" alt="${d.title}" loading="lazy">
-          </div>
-        </a>`;
-      });
-      designContainer.innerHTML = html;
+      renderDesigns(sampleDesigns);
       
-      // Cache sample designs
-      sessionStorage.setItem('rehabace_designs', JSON.stringify(sampleDesigns));
+      // Cache sample designs with error handling
+      safeSetCache('rehabace_designs_light', sampleDesigns);
     }
     
     if (productGrid && productGrid.children.length === 0) {
@@ -589,20 +631,10 @@
         { title: 'Balance Board', price: '12,500 NGN', img: 'https://via.placeholder.com/300?text=Balance+Board', id: 'sample4', push: 'sample4' }
       ];
       
-      let html = '';
-      sampleProducts.forEach(p => {
-        html += `<a href="display.html?push=${p.id}" class="product-card">
-          <img src="${p.img}" alt="${p.title}" loading="lazy">
-          <div class="product-info">
-            <div class="product-title">${p.title}</div>
-            <div class="product-price">${p.price}</div>
-          </div>
-        </a>`;
-      });
-      productGrid.innerHTML = html;
+      renderProducts(sampleProducts);
       
-      // Cache sample products
-      sessionStorage.setItem('rehabace_products', JSON.stringify(sampleProducts));
+      // Cache sample products with error handling
+      safeSetCache('rehabace_products_light', sampleProducts);
     }
   }
 
