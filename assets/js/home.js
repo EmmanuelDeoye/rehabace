@@ -1,5 +1,77 @@
-// assets/js/home.js - complete updated file with fixes
+// assets/js/home.js – Optimised for speed
 (function() {
+  // ------ ACTIVE NAVIGATION INDICATION ------
+  function setActiveNavLink() {
+    const navLinks = document.querySelectorAll('.main-nav ul li a');
+    const currentPath = window.location.pathname;
+    const currentHash = window.location.hash;
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      
+      const href = link.getAttribute('href');
+      
+      // Check if this is the home page and link is to home or root
+      if ((currentPath.endsWith('index.html') || currentPath === '/' || currentPath.endsWith('/')) && 
+          (href === '#hero' || href === 'index.html' || href === './')) {
+        link.classList.add('active');
+      }
+      // Check for hash links on the same page
+      else if (currentHash && href === currentHash) {
+        link.classList.add('active');
+      }
+      // Check for exact page matches
+      else if (href && !href.startsWith('#') && currentPath.endsWith(href)) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  // Update active nav when scrolling through sections (for one-page sections)
+  function updateActiveNavOnScroll() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.main-nav ul li a');
+    
+    if (sections.length === 0) return;
+    
+    let currentSection = '';
+    const scrollPosition = window.scrollY + 100; // Offset for header
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        currentSection = sectionId;
+      }
+    });
+    
+    if (currentSection) {
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href === `#${currentSection}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+  }
+
+  // Call setActiveNavLink on page load
+  document.addEventListener('DOMContentLoaded', setActiveNavLink);
+
+  // Add scroll event listener for one-page navigation
+  window.addEventListener('scroll', () => {
+    // Only update on pages with hash links (like index.html)
+    if (window.location.pathname.endsWith('index.html') || 
+        window.location.pathname === '/' || 
+        window.location.pathname.endsWith('/')) {
+      updateActiveNavOnScroll();
+    }
+  });
+
   // ------ THEME TOGGLE (single icon) ------
   const themeToggle = document.getElementById('themeToggle');
   const html = document.documentElement;
@@ -182,69 +254,33 @@
     // Change from grid to scroll container
     testimonialGrid.className = 'testimonial-scroll';
     
-    // Static testimonial data - 10 real testimonials
-    const staticTestimonials = [
-      {
-        name: 'Dr. Sarah Johnson',
-        role: 'Pediatric Occupational Therapist',
-        rating: 5,
-        message: 'REHABACE transformed our therapy center completely. The sensory room they designed has become our most valuable asset. Children who were previously struggling to engage now look forward to their sessions.'
-      },
-      {
-        name: 'Michael Adebayo',
-        role: 'Clinic Director, Healing Hands Rehab',
-        rating: 5,
-        message: 'Working with REHABACE was seamless from concept to completion. Their understanding of therapeutic needs combined with aesthetic excellence sets them apart. Our patients and staff absolutely love the new space.'
-      },
-      {
-        name: 'Priya Sharma',
-        role: 'Special Education Teacher',
-        rating: 5,
-        message: 'The calm-down corner REHABACE created for our classroom has reduced behavioral incidents by 60%. The children now have a safe space to regulate their emotions. Thank you for this gift.'
-      },
-      {
-        name: 'Dr. James Okafor',
-        role: 'Rehabilitation Specialist',
-        rating: 5,
-        message: 'I\'ve consulted on therapy center designs for 15 years, and REHABACE is simply the best. Their attention to sensory details, lighting, and accessibility is unmatched in the industry.'
-      },
-      {
-        name: 'Elizabeth Ndlovu',
-        role: 'Parent of child with autism',
-        rating: 5,
-        message: 'The home sensory room REHABACE designed for my son has been life-changing. He\'s more regulated, sleeps better, and his meltdowns have decreased dramatically. Worth every penny.'
-      },
-      {
-        name: 'Dr. Amara Eze',
-        role: 'Clinical Psychologist',
-        rating: 5,
-        message: 'REHABACE doesn\'t just design spaces; they understand the neuroscience behind healing environments. The biophilic elements they incorporated have noticeably improved patient outcomes.'
-      },
-      {
-        name: 'Thomas Wright',
-        role: 'Hospital Administrator',
-        rating: 5,
-        message: 'Our rehabilitation wing renovation by REHABACE came in under budget and ahead of schedule. The feedback from both patients and staff has been overwhelmingly positive.'
-      },
-      {
-        name: 'Linda Mensah',
-        role: 'Early Intervention Specialist',
-        rating: 5,
-        message: 'The sensory integration room at our early childhood center is magical. Babies and toddlers are more alert, engaged, and calm. Parents keep asking what we\'ve changed!'
-      },
-      {
-        name: 'Dr. Robert Chen',
-        role: 'Neurorehabilitation Director',
-        rating: 5,
-        message: 'REHABACE understood exactly what we needed for stroke patients. The accessibility features blend seamlessly with the aesthetic. Our therapy outcomes have improved since the redesign.'
-      },
-      {
-        name: 'Grace Akinyi',
-        role: 'School Principal',
-        rating: 5,
-        message: 'We hired REHABACE to create a multi-sensory room for our special needs unit. The result exceeded all expectations. Every school should have a space like this.'
-      }
-    ];
+    // Static testimonial data - 4 realistic testimonials
+const staticTestimonials = [
+  {
+    name: 'Dr. Amina Bello',
+    role: 'Pediatric Occupational Therapist',
+    rating: 5,
+    message: 'REHABACE helped us transform a regular therapy room into a functional sensory integration space. The layout, lighting, and equipment placement made a huge difference in how our children engage during sessions.'
+  },
+  {
+    name: 'Mr. Samuel Kehinde',
+    role: 'Clinic Manager, TolexarsTherapyServices',
+    rating: 4,
+    message: 'From consultation to execution, the REHABACE team understood exactly what a therapy environment should feel like. Our staff now work more efficiently and our clients always comment on how calming the space is.'
+  },
+  {
+    name: 'Mrs. Chidinma Okeke',
+    role: 'Parent of a Child with Autism',
+    rating: 5,
+    message: 'The sensory corner designed for our home has helped my son regulate better. He now has a safe space where he can calm down and focus. We are very grateful for the thoughtful design.'
+  },
+  {
+    name: 'Dr. Ibrahim Lawal',
+    role: 'Physiotherapist',
+    rating: 4,
+    message: 'REHABACE combines therapy knowledge with practical design. The therapy room they helped us structure improved patient flow and made sessions more productive for both therapists and clients.'
+  }
+];
     
     let html = '';
     staticTestimonials.forEach(t => {
@@ -370,18 +406,17 @@
     }
   }
 
-  // ------ FIXED: CACHED DATA FOR DESIGNS AND PRODUCTS ------
-  // Check if we have cached data in sessionStorage (with error handling for quota)
+  // ------ OPTIMISED: CACHED DATA FOR DESIGNS AND PRODUCTS ------
   const designContainer = document.getElementById('designScroll');
   const productGrid = document.getElementById('productGrid');
   
-  // Try to load from cache first
+  // Try to load from cache first (instant display)
   loadCachedData();
   
-  // Then fetch fresh data in the background
+  // Then fetch fresh data in the background using optimised queries
   if (typeof firebase !== 'undefined') {
     setTimeout(() => {
-      fetchFreshData();
+      fetchFreshDataOptimised();
     }, 100);
   } else {
     // If Firebase not available, show sample data after a delay
@@ -391,7 +426,7 @@
   function loadCachedData() {
     try {
       // Check sessionStorage for cached designs
-      const cachedDesigns = sessionStorage.getItem('rehabace_designs_light'); // Changed key name
+      const cachedDesigns = sessionStorage.getItem('rehabace_designs_light');
       if (cachedDesigns && designContainer) {
         try {
           const designs = JSON.parse(cachedDesigns);
@@ -405,7 +440,7 @@
       }
 
       // Check sessionStorage for cached products
-      const cachedProducts = sessionStorage.getItem('rehabace_products_light'); // Changed key name
+      const cachedProducts = sessionStorage.getItem('rehabace_products_light');
       if (cachedProducts && productGrid) {
         try {
           const products = JSON.parse(cachedProducts);
@@ -507,8 +542,8 @@
         console.log('Storage quota exceeded, clearing old cache and retrying...');
         // Clear old items and try again
         try {
-          sessionStorage.removeItem('rehabace_designs');
-          sessionStorage.removeItem('rehabace_products');
+          sessionStorage.removeItem('rehabace_designs_light');
+          sessionStorage.removeItem('rehabace_products_light');
           sessionStorage.removeItem(key);
           // Try one more time with minimal data
           const minimalData = data.slice(0, 4).map(item => ({
@@ -525,7 +560,8 @@
     }
   }
 
-  function fetchFreshData() {
+  // OPTIMISED: Fetch only latest 10 designs and 4 products using Firebase queries
+  function fetchFreshDataOptimised() {
     if (typeof firebase === 'undefined') {
       console.log('Firebase not available');
       showSampleData();
@@ -533,78 +569,92 @@
     }
 
     const database = firebase.database();
+    const promises = [];
 
-    // ----- DESIGNS: fetch and cache -----
+    // ----- DESIGNS: fetch latest 10 using timestamp -----
     if (designContainer) {
-      database.ref('designs').once('value', (snapshot) => {
-        const designs = [];
-        snapshot.forEach(child => {
-          designs.push({ 
-            id: child.key, 
-            ...child.val() 
-          });
-        });
-        
-        if (designs.length > 0) {
-          // sort by timestamp descending (newest first), take up to 10
-          const latest = designs
-            .sort((a, b) => {
-              const timeA = parseInt(a.timestamp) || 0;
-              const timeB = parseInt(b.timestamp) || 0;
-              return timeB - timeA;
-            })
-            .slice(0, 10);
-          
-          // Save to sessionStorage with error handling
-          safeSetCache('rehabace_designs_light', latest);
-          
-          // Update UI
-          renderDesigns(latest);
-          console.log('Designs updated from Firebase');
-        } else {
-          showSampleData();
-        }
-      }).catch(err => {
-        console.log('Error fetching designs:', err);
-        showSampleData();
-      });
+      promises.push(
+        database.ref('designs')
+          .orderByChild('timestamp')  // ensure you have an index on 'timestamp'
+          .limitToLast(7)
+          .once('value')
+          .then(snapshot => {
+            const designs = [];
+            snapshot.forEach(child => {
+              designs.push({ 
+                id: child.key, 
+                ...child.val() 
+              });
+            });
+            
+            if (designs.length > 0) {
+              // Firebase returns in ascending order, so reverse to get newest first
+              const latest = designs.reverse();
+              
+              // Save to sessionStorage with error handling
+              safeSetCache('rehabace_designs_light', latest);
+              
+              // Update UI
+              renderDesigns(latest);
+              console.log('Designs updated from Firebase (optimised)');
+            } else {
+              // No designs, fallback to samples
+              if (designContainer.children.length === 0) showSampleData();
+            }
+          })
+          .catch(err => {
+            console.log('Error fetching designs:', err);
+            if (designContainer.children.length === 0) showSampleData();
+          })
+      );
     }
 
-    // ----- PRODUCTS: fetch and cache -----
+    // ----- PRODUCTS: fetch latest 4 using time -----
     if (productGrid) {
-      database.ref('products').once('value', (snapshot) => {
-        const products = [];
-        snapshot.forEach(child => {
-          products.push({ 
-            id: child.key, 
-            ...child.val() 
-          });
-        });
-        
-        if (products.length > 0) {
-          // sort by time descending (newest first), take up to 4
-          const latest = products
-            .sort((a, b) => {
-              const timeA = parseInt(a.time) || 0;
-              const timeB = parseInt(b.time) || 0;
-              return timeB - timeA;
-            })
-            .slice(0, 4);
-          
-          // Save to sessionStorage with error handling
-          safeSetCache('rehabace_products_light', latest);
-          
-          // Update UI
-          renderProducts(latest);
-          console.log('Products updated from Firebase');
-        } else {
+      promises.push(
+        database.ref('products')
+          .orderByChild('time')  // ensure you have an index on 'time'
+          .limitToLast(4)
+          .once('value')
+          .then(snapshot => {
+            const products = [];
+            snapshot.forEach(child => {
+              products.push({ 
+                id: child.key, 
+                ...child.val() 
+              });
+            });
+            
+            if (products.length > 0) {
+              const latest = products.reverse(); // newest first
+              
+              // Save to sessionStorage with error handling
+              safeSetCache('rehabace_products_light', latest);
+              
+              // Update UI
+              renderProducts(latest);
+              console.log('Products updated from Firebase (optimised)');
+            } else {
+              if (productGrid.children.length === 0) showSampleData();
+            }
+          })
+          .catch(err => {
+            console.log('Error fetching products:', err);
+            if (productGrid.children.length === 0) showSampleData();
+          })
+      );
+    }
+
+    // If both promises fail or take too long, fallback after a timeout
+    Promise.all(promises).catch(() => {
+      // If after 5 seconds no data has been rendered, show samples
+      setTimeout(() => {
+        if ((designContainer && designContainer.children.length === 0) ||
+            (productGrid && productGrid.children.length === 0)) {
           showSampleData();
         }
-      }).catch(err => {
-        console.log('Error fetching products:', err);
-        showSampleData();
-      });
-    }
+      }, 5000);
+    });
   }
 
   function showSampleData() {
@@ -640,14 +690,69 @@
 
   // ----- FAQ ACCORDION -----
   const faqList = document.getElementById('faqList');
-  if (faqList) {
-    const faqData = [
-      { q: 'What is a sensory room?', a: 'A sensory room is a controlled space designed to stimulate or calm the senses, often used for therapy, relaxation, and development. Our rooms include lighting, textures, and equipment tailored to individual needs.' },
-      { q: 'How long does installation take?', a: 'Typical installation takes 2-4 weeks depending on room size and customization level. We work efficiently to minimize disruption to your facility.' },
-      { q: 'Do you customize designs?', a: 'Absolutely. We tailor every element to the client\'s specific requirements, space constraints, and therapeutic goals. No two projects are exactly alike.' },
-      { q: 'Do you supply equipment nationwide?', a: 'Yes, we ship and install across the country with our logistics partners. We also offer virtual consultations for remote clients.' },
-      { q: 'What certifications do you have?', a: 'Our team includes certified occupational therapists, interior designers, and construction experts. All equipment meets international safety standards.' }
-    ];
+if (faqList) {
+  const faqData = [
+    { 
+      q: 'What is a sensory room?', 
+      a: 'A sensory room is a specially designed environment that helps regulate sensory input. It can stimulate or calm the senses using lighting, textures, movement equipment, and interactive elements. These rooms are commonly used for children with autism, developmental delays, and individuals who benefit from sensory regulation during therapy.' 
+    },
+
+    { 
+      q: 'Who can benefit from a sensory room?', 
+      a: 'Sensory rooms are beneficial for children and adults with autism, ADHD, sensory processing difficulties, developmental delays, neurological conditions, and emotional regulation challenges. They are widely used in therapy clinics, schools, hospitals, and even private homes.' 
+    },
+
+    { 
+      q: 'Can you design a sensory room in a small space?', 
+      a: 'Yes. Many effective sensory spaces are created in compact rooms, classrooms, or even corners. Our team designs layouts that maximize available space while ensuring the environment remains functional, safe, and therapeutic.' 
+    },
+
+    { 
+      q: 'How long does installation take?', 
+      a: 'Most projects take between 2–4 weeks depending on the size of the room and level of customization. We handle everything from design to installation so that your facility can start using the space as soon as possible.' 
+    },
+
+    { 
+      q: 'Do you customize designs?', 
+      a: 'Absolutely. Every project is tailored to the client’s needs. We consider the purpose of the room, the type of users, available space, and therapeutic goals to create a solution that works specifically for you.' 
+    },
+
+    { 
+      q: 'Do you supply therapy and sensory equipment?', 
+      a: 'Yes. In addition to designing therapy spaces, we supply a range of sensory and rehabilitation equipment such as swings, tactile panels, therapy furniture, calming lights, and sensory integration tools.' 
+    },
+
+    { 
+      q: 'Can you help set up therapy rooms for new clinics?', 
+      a: 'Yes. We work with new therapy centers, rehabilitation clinics, and special education schools to design complete therapy environments including sensory rooms, treatment areas, and functional layouts that support therapists and clients.' 
+    },
+
+    { 
+      q: 'Do you work with schools and special education centers?', 
+      a: 'Yes. Many of our projects involve schools that want to create sensory-friendly classrooms, calm-down corners, or multi-sensory rooms that support students with diverse learning and developmental needs.' 
+    },
+
+    { 
+      q: 'Do you offer consultation before starting a project?', 
+      a: 'Yes. We start with a consultation to understand your goals, available space, and budget. This allows us to recommend practical solutions and create a design that delivers real therapeutic value.' 
+    },
+
+    { 
+      q: 'Do you handle projects outside Lagos?', 
+      a: 'Yes, we work with clients across Nigeria. Depending on the project, we provide remote consultation, equipment delivery, or full installation through our logistics and technical partners.' 
+    },
+
+    { 
+      q: 'How much does it cost to set up a sensory room?', 
+      a: 'The cost depends on the size of the space, the equipment required, and the level of customization. We offer flexible options to suit different budgets, and we can recommend a setup that provides the most value for your investment.' 
+    },
+
+    { 
+      q: 'How do I get started?', 
+      a: 'The easiest way is to contact our team for a consultation. We will discuss your goals, review your available space, and guide you through the best options to create a therapy environment that works for your needs.' 
+    }
+  ];
+
     
     let html = '';
     faqData.forEach((item) => {
@@ -675,3 +780,13 @@
     fetchFirebaseTestimonials();
   }, 3000);
 })();
+
+
+// Add this anywhere in your home.js file (maybe at the end)
+// Optional: Blur-up image loading effect
+document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+  img.classList.add('lazy-blur');
+  img.addEventListener('load', function() {
+    this.classList.add('loaded');
+  });
+});

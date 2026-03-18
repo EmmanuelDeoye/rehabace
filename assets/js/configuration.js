@@ -1,5 +1,5 @@
 // Firebase configuration
-const config = {
+const firebaseConfig = {
     apiKey: "AIzaSyAuT-RlMl5g4m96V3DtUWGFV6ym7YnMXt8",
     authDomain: "tolexars-ac868.firebaseapp.com",
     databaseURL: "https://tolexars-ac868-default-rtdb.firebaseio.com",
@@ -7,8 +7,18 @@ const config = {
     storageBucket: "tolexars-ac868.appspot.com",
     messagingSenderId: "148559800786"
 };
-firebase.initializeApp(config);
 
-const auth = firebase.auth();
-const database = firebase.database(); // Ensure firebase.database() is initialized
-const storage = firebase.storage(); // Ensure firebase.storage() is initialized
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Make services globally available
+window.auth = firebase.auth();
+window.database = firebase.database();
+window.storage = firebase.storage();
+
+// Also create local constants for use in this file
+const auth = window.auth;
+const database = window.database;
+const storage = window.storage;
+
+console.log('Firebase initialized. Auth available:', !!auth);

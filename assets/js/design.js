@@ -1,6 +1,5 @@
-// assets/js/design.js - blended with REHABACE (functionality preserved)
-// Design Gallery JavaScript
-document.addEventListener('DOMContentLoaded', function() {
+// assets/js/design.js - Optimized for speed with skeleton cards
+(function() {
     // Check if Firebase is available
     if (typeof firebase === 'undefined' || typeof database === 'undefined') {
         console.error('Firebase not loaded. Make sure configuration.js is correct.');
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Firebase references
+    // Define Firebase reference
     const designsRef = database.ref('designs');
     
     // DOM elements
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let allDesigns = [];
     let filteredDesigns = [];
     let searchTimeout = null;
-    let isLoading = false;
     let isInitialLoad = true;
     
     // Session storage keys
@@ -36,67 +34,78 @@ document.addEventListener('DOMContentLoaded', function() {
         TIMESTAMP: 'rehabace_designs_timestamp'
     };
     
-    // Cache expiration time (5 minutes)
-    const CACHE_EXPIRATION = 5 * 60 * 1000;
+    // Cache expiration time (10 minutes)
+    const CACHE_EXPIRATION = 10 * 60 * 1000;
     
-    // Initialize the page
+    // Initialize the page with priority on speed
     function init() {
+        // Hide the old loading overlay, we're using skeleton cards now
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        
         // Restore filter states from session storage
         restoreFilterStates();
         
-        // Try to load cached designs first
+        // Try to load cached designs FIRST
         const cachedData = loadCachedDesigns();
         
-        if (cachedData) {
+        if (cachedData && cachedData.length > 0) {
             // Use cached data immediately
             allDesigns = cachedData;
-            console.log(`Loaded ${allDesigns.length} designs from cache`);
+            console.log(`⚡ Loaded ${allDesigns.length} designs from cache (instant)`);
             
             // Apply filters with restored states
-            applyFilters();
-            hideLoading();
+            applyFilters(true);
             
             // Fetch fresh data in background
-            fetchFreshDesigns();
+            setTimeout(() => fetchFreshDesigns(), 100);
         } else {
             // No cache, load from Firebase
+            console.log('No cache found, loading from Firebase...');
             loadDesigns();
         }
         
         setupEventListeners();
         createConsultationButton();
-        setupBeforeUnload(); // Save state before leaving
+        setupBeforeUnload();
     }
     
     // Restore filter states from session storage
     function restoreFilterStates() {
-        const savedCategory = sessionStorage.getItem(STORAGE_KEYS.CATEGORY);
-        const savedSort = sessionStorage.getItem(STORAGE_KEYS.SORT);
-        const savedSearch = sessionStorage.getItem(STORAGE_KEYS.SEARCH);
-        
-        if (savedCategory && categoryFilter) {
-            categoryFilter.value = savedCategory;
-        }
-        
-        if (savedSort && sortFilter) {
-            sortFilter.value = savedSort;
-        }
-        
-        if (savedSearch && searchInput) {
-            searchInput.value = savedSearch;
+        try {
+            const savedCategory = sessionStorage.getItem(STORAGE_KEYS.CATEGORY);
+            const savedSort = sessionStorage.getItem(STORAGE_KEYS.SORT);
+            const savedSearch = sessionStorage.getItem(STORAGE_KEYS.SEARCH);
+            
+            if (savedCategory && categoryFilter) {
+                categoryFilter.value = savedCategory;
+            }
+            
+            if (savedSort && sortFilter) {
+                sortFilter.value = savedSort;
+            }
+            
+            if (savedSearch && searchInput) {
+                searchInput.value = savedSearch;
+            }
+        } catch (e) {
+            console.warn('Failed to restore filter states:', e);
         }
     }
     
     // Save current filter states to session storage
     function saveFilterStates() {
-        if (categoryFilter) {
-            sessionStorage.setItem(STORAGE_KEYS.CATEGORY, categoryFilter.value);
-        }
-        if (sortFilter) {
-            sessionStorage.setItem(STORAGE_KEYS.SORT, sortFilter.value);
-        }
-        if (searchInput) {
-            sessionStorage.setItem(STORAGE_KEYS.SEARCH, searchInput.value);
+        try {
+            if (categoryFilter) {
+                sessionStorage.setItem(STORAGE_KEYS.CATEGORY, categoryFilter.value);
+            }
+            if (sortFilter) {
+                sessionStorage.setItem(STORAGE_KEYS.SORT, sortFilter.value);
+            }
+            if (searchInput) {
+                sessionStorage.setItem(STORAGE_KEYS.SEARCH, searchInput.value);
+            }
+        } catch (e) {
+            console.warn('Failed to save filter states:', e);
         }
     }
     
@@ -120,10 +129,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return null;
     }
     
-    // Save designs to session storage cache
+    // Save designs to session storage cache (lightweight version)
     function cacheDesigns(designs) {
         try {
-            sessionStorage.setItem(STORAGE_KEYS.DESIGNS, JSON.stringify(designs));
+            // Create lightweight version for caching (only essential fields)
+            const lightweightDesigns = designs.map(design => ({
+                id: design.id,
+                title: design.title || 'Design',
+                category: design.category || 'Uncategorized',
+                imageUrl: design.imageUrl || 'https://via.placeholder.com/400x300?text=Design',
+                timestamp: design.timestamp || 0
+            }));
+            
+            sessionStorage.setItem(STORAGE_KEYS.DESIGNS, JSON.stringify(lightweightDesigns));
             sessionStorage.setItem(STORAGE_KEYS.TIMESTAMP, Date.now().toString());
         } catch (e) {
             console.warn('Failed to cache designs:', e);
@@ -148,18 +166,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         return {
                             id: key,
                             ...designsData[key],
-                            timestamp: designsData[key].timestamp || 0
+                            timestamp: designsData[key]?.timestamp || 0
                         };
                     });
                     
                     // Update cache
                     cacheDesigns(freshDesigns);
                     
-                    // Check if data has changed (simple length check - you might want better diff)
+                    // Check if data has changed
                     if (freshDesigns.length !== allDesigns.length) {
                         console.log('New designs available, updating...');
                         allDesigns = freshDesigns;
-                        applyFilters();
+                        applyFilters(true);
                     }
                 }
             })
@@ -170,9 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load designs from Firebase
     function loadDesigns() {
-        showLoading();
-        isLoading = true;
-        
         designsRef.once('value')
             .then(snapshot => {
                 const designsData = snapshot.val();
@@ -183,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         return {
                             id: key,
                             ...designsData[key],
-                            timestamp: designsData[key].timestamp || 0
+                            timestamp: designsData[key]?.timestamp || 0
                         };
                     });
                     
@@ -197,75 +212,76 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     showNoResults();
                 }
-                
-                hideLoading();
-                isLoading = false;
             })
             .catch(error => {
                 console.error("Error loading designs:", error);
-                hideLoading();
-                isLoading = false;
-                showError();
+                
+                // If we have cached data, keep showing it
+                if (!allDesigns.length) {
+                    showError();
+                }
             });
     }
     
     // Set up event listeners for filters and search
     function setupEventListeners() {
         // Filter changes - save state immediately
-        categoryFilter.addEventListener('change', function() {
-            saveFilterStates();
-            applyFilters();
-        });
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', function() {
+                saveFilterStates();
+                applyFilters();
+            });
+        }
         
-        sortFilter.addEventListener('change', function() {
-            saveFilterStates();
-            applyFilters();
-        });
+        if (sortFilter) {
+            sortFilter.addEventListener('change', function() {
+                saveFilterStates();
+                applyFilters();
+            });
+        }
         
         // Search button click
-        searchBtn.addEventListener('click', function() {
-            saveFilterStates();
-            applyFilters();
-        });
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                saveFilterStates();
+                applyFilters();
+            });
+        }
         
         // Search input with debouncing for better performance
-        searchInput.addEventListener('input', function(event) {
-            // Clear previous timeout
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
-            
-            // Set new timeout to apply filters after user stops typing
-            searchTimeout = setTimeout(function() {
-                saveFilterStates();
-                applyFilters();
-            }, 300); // 300ms debounce
-        });
-        
-        // Search on Enter key
-        searchInput.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') {
-                // Clear any pending timeout
+        if (searchInput) {
+            searchInput.addEventListener('input', function(event) {
+                // Clear previous timeout
                 if (searchTimeout) {
                     clearTimeout(searchTimeout);
-                    searchTimeout = null;
                 }
-                saveFilterStates();
-                applyFilters();
-            }
-        });
+                
+                // Set new timeout to apply filters after user stops typing
+                searchTimeout = setTimeout(function() {
+                    saveFilterStates();
+                    applyFilters();
+                }, 300);
+            });
+            
+            // Search on Enter key
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    if (searchTimeout) {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = null;
+                    }
+                    saveFilterStates();
+                    applyFilters();
+                }
+            });
+        }
         
-        // Clear search button (optional - can be added to UI later)
         setupClearSearchButton();
-        
-        // Use session storage instead of localStorage for better performance
-        // and automatic cleanup when tab is closed
     }
     
     // Setup clear search button functionality
     function setupClearSearchButton() {
-        // Create clear button if it doesn't exist
-        if (!document.getElementById('clear-search')) {
+        if (!document.getElementById('clear-search') && searchInput) {
             const clearBtn = document.createElement('span');
             clearBtn.id = 'clear-search';
             clearBtn.innerHTML = '&times;';
@@ -282,34 +298,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 z-index: 2;
                 width: 24px;
                 height: 24px;
-                display: flex;
                 align-items: center;
                 justify-content: center;
                 border-radius: 50%;
                 background-color: var(--border-color);
             `;
             
-            // Wrap search controls in relative position if not already
             const searchControls = document.querySelector('.search-controls');
             if (searchControls) {
                 searchControls.style.position = 'relative';
                 searchControls.appendChild(clearBtn);
                 
-                // Show/hide clear button based on input
                 searchInput.addEventListener('input', function() {
-                    if (this.value.length > 0) {
-                        clearBtn.style.display = 'flex';
-                    } else {
-                        clearBtn.style.display = 'none';
-                    }
+                    clearBtn.style.display = this.value.length > 0 ? 'flex' : 'none';
                 });
                 
-                // Check initial state
                 if (searchInput.value.length > 0) {
                     clearBtn.style.display = 'flex';
                 }
                 
-                // Clear search on click
                 clearBtn.addEventListener('click', function() {
                     searchInput.value = '';
                     this.style.display = 'none';
@@ -321,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Create floating consultation button (only if not exists)
+    // Create floating consultation button
     function createConsultationButton() {
         if (document.querySelector('.floating-help-button')) return;
         
@@ -338,39 +345,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Apply all filters and render results
-    function applyFilters() {
-        // Don't show loading for filter changes if we already have data
-        if (allDesigns.length > 0 && !isLoading && !isInitialLoad) {
-            // Use requestAnimationFrame for smoother UI updates
-            requestAnimationFrame(() => {
-                performFiltering();
-            });
-        } else {
+    function applyFilters(skipLoading = false) {
+        // Use requestAnimationFrame for smoother UI updates
+        requestAnimationFrame(() => {
             performFiltering();
-        }
-        
-        isInitialLoad = false;
+        });
     }
     
     // Perform the actual filtering logic
     function performFiltering() {
+        if (!categoryFilter || !sortFilter || !searchInput) return;
+        
         const category = categoryFilter.value;
         const sortBy = sortFilter.value;
         const searchTerm = searchInput.value.toLowerCase().trim();
         
-        console.log(`Applying filters - Category: ${category}, Sort: ${sortBy}, Search: "${searchTerm}"`);
-        
         // Start with all designs
         filteredDesigns = [...allDesigns];
         
-        // Filter by category (case insensitive)
+        // Filter by category
         if (category !== 'all') {
             filteredDesigns = filteredDesigns.filter(design => {
-                // Handle different possible category field names
                 const designCategory = (design.category || design.roomType || '').toLowerCase().trim();
                 const filterCategory = category.toLowerCase().trim();
                 
-                // Check for exact match or if design category contains the filter
                 return designCategory === filterCategory || 
                        designCategory.includes(filterCategory) ||
                        filterCategory.includes(designCategory);
@@ -389,8 +387,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Sort results
         sortDesigns(sortBy);
-        
-        console.log(`Filtered ${filteredDesigns.length} designs`);
         
         // Render results
         renderDesigns();
@@ -422,12 +418,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        noResults.style.display = 'none';
+        if (noResults) noResults.style.display = 'none';
         designsContainer.style.display = 'grid';
         
         // Use document fragment for better performance
         const fragment = document.createDocumentFragment();
         
+        // Render all designs
         filteredDesigns.forEach(design => {
             const designCard = createDesignCard(design);
             fragment.appendChild(designCard);
@@ -436,6 +433,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear and append in one operation
         designsContainer.innerHTML = '';
         designsContainer.appendChild(fragment);
+        
+        isInitialLoad = false;
     }
     
     // Create a design card element
@@ -443,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'design-card';
         
-        // Handle missing image
+        // Handle missing image with low-res placeholder
         const imageUrl = design.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image';
         const title = design.title || 'Design Idea';
         const category = design.category || 'Uncategorized';
@@ -451,8 +450,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Truncate title if too long
         const truncatedTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
         
+        // Create card
         card.innerHTML = `
-            <img src="${imageUrl}" alt="${title}" class="design-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'">
+            <img src="${imageUrl}" alt="${title}" class="design-image" loading="lazy" 
+                 onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'"
+                 style="background: #f0f0f0;">
             <div class="design-content">
                 <h3 class="design-title">${truncatedTitle}</h3>
                 <div class="design-meta">
@@ -461,9 +463,8 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Add click event to redirect to details page
+        // Add click event
         card.addEventListener('click', () => {
-            // Save current state before navigating away
             saveFilterStates();
             window.location.href = `design-details.html?id=${design.id}`;
         });
@@ -471,58 +472,36 @@ document.addEventListener('DOMContentLoaded', function() {
         return card;
     }
     
-    // Show loading state
-    function showLoading() {
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'flex';
-        }
-        if (designsContainer) {
-            designsContainer.style.display = 'none';
-        }
-        if (noResults) {
-            noResults.style.display = 'none';
-        }
-    }
-    
-    // Hide loading state
-    function hideLoading() {
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'none';
-        }
-    }
-    
     // Show no results message
     function showNoResults() {
-        if (designsContainer) {
-            designsContainer.innerHTML = '';
-            designsContainer.style.display = 'none';
+        if (!designsContainer || !noResults) return;
+        
+        designsContainer.innerHTML = '';
+        designsContainer.style.display = 'none';
+        noResults.style.display = 'block';
+        
+        const category = categoryFilter ? categoryFilter.value : 'all';
+        const searchTerm = searchInput ? searchInput.value.trim() : '';
+        
+        let message = 'Try adjusting your filters or search terms';
+        if (category !== 'all' && searchTerm) {
+            message = `No designs found in "${category}" category matching "${searchTerm}"`;
+        } else if (category !== 'all') {
+            message = `No designs found in "${category}" category`;
+        } else if (searchTerm) {
+            message = `No designs found matching "${searchTerm}"`;
         }
-        if (noResults) {
-            noResults.style.display = 'block';
-            
-            // Update message based on filters
-            const category = categoryFilter.value;
-            const searchTerm = searchInput.value.trim();
-            
-            let message = 'Try adjusting your filters or search terms';
-            if (category !== 'all' && searchTerm) {
-                message = `No designs found in "${category}" category matching "${searchTerm}"`;
-            } else if (category !== 'all') {
-                message = `No designs found in "${category}" category`;
-            } else if (searchTerm) {
-                message = `No designs found matching "${searchTerm}"`;
-            }
-            
-            const messageEl = noResults.querySelector('p');
-            if (messageEl) {
-                messageEl.textContent = message;
-            }
+        
+        const messageEl = noResults.querySelector('p');
+        if (messageEl) {
+            messageEl.textContent = message;
         }
     }
     
     // Show error message
     function showError() {
         if (!designsContainer) return;
+        
         designsContainer.innerHTML = `
             <div class="error-state">
                 <i class='bx bx-error'></i>
@@ -540,12 +519,12 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         designsContainer.style.display = 'grid';
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
     }
     
     // Helper for connection errors
     function showErrorMessage(msg) {
         if (!designsContainer) return;
+        
         designsContainer.innerHTML = `
             <div class="error-state">
                 <i class='bx bx-wifi-off'></i>
@@ -562,12 +541,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 ">Refresh</button>
             </div>
         `;
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        designsContainer.style.display = 'grid';
     }
     
-    // Initialize the page
-    init();
-});
-
-// Preserve original auth modal functionality if needed
-// (Add any additional auth-related code that might be expected)
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
