@@ -337,24 +337,7 @@
     border: 2px solid var(--card-bg);
 }
 
-.auth-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
 
-.auth-btn:hover {
-    background: transparent;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
 
 /* ===== RESPONSIVE GRID ===== */
 @media (min-width: 576px) {
@@ -427,3 +410,410 @@
 
 
 
+ 13. AUTH MODAL (enhanced)
+   
+   /* --------------------------------------------------------------------------
+/* Auth Modal - reused from home.css but enhanced for account page */
+#auth-modal.modal {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+#auth-modal .modal-content {
+  background: var(--card-bg);
+  margin: 80px auto;
+  border-radius: 30px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#auth-modal .modal-close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  z-index: 10;
+}
+
+#auth-modal .modal-close:hover {
+  color: var(--primary-color);
+}
+
+#auth-modal .auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin: 0 30px 20px;
+}
+
+#auth-modal .auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20px 0 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 1.1rem;
+}
+
+#auth-modal .auth-tab.active {
+  color: var(--primary-color);
+}
+
+#auth-modal .auth-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px 3px 0 0;
+}
+
+#auth-modal .auth-form {
+  padding: 0 20px 20px;
+  display: none;
+}
+
+#auth-modal .auth-form.active {
+  display: block;
+}
+
+#auth-modal .form-group {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+#auth-modal .forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+#auth-modal .forgot-password a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#auth-modal .forgot-password a:hover {
+  text-decoration: underline;
+}
+
+#auth-modal button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 20px 0 15px;
+  box-shadow: 0 8px 16px rgba(0,150,136,0.25);
+}
+
+#auth-modal button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(0,150,136,0.35);
+}
+
+#auth-modal .auth-switch {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+#auth-modal .auth-switch a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+#auth-modal .auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* Spinner */
+#auth-spinner.spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0,150,136,0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 0.8s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.terms-agreement {
+    margin: 15px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.checkbox-text {
+    line-height: 1.4;
+}
+
+.checkbox-text a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.checkbox-text a:hover {
+    text-decoration: underline;
+}
+
+
+
+ 13. AUTH MODAL (enhanced)
+   
+   /* --------------------------------------------------------------------------
+/* Auth Modal - reused from home.css but enhanced for account page */
+#auth-modal.modal {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+#auth-modal .modal-content {
+  background: var(--card-bg);
+  margin: 80px auto;
+  border-radius: 30px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#auth-modal .modal-close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  z-index: 10;
+}
+
+#auth-modal .modal-close:hover {
+  color: var(--primary-color);
+}
+
+#auth-modal .auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin: 0 30px 20px;
+}
+
+#auth-modal .auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20px 0 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 1.1rem;
+}
+
+#auth-modal .auth-tab.active {
+  color: var(--primary-color);
+}
+
+#auth-modal .auth-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px 3px 0 0;
+}
+
+#auth-modal .auth-form {
+  padding: 0 20px 20px;
+  display: none;
+}
+
+#auth-modal .auth-form.active {
+  display: block;
+}
+
+#auth-modal .form-group {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+#auth-modal .forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+#auth-modal .forgot-password a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#auth-modal .forgot-password a:hover {
+  text-decoration: underline;
+}
+
+#auth-modal button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 20px 0 15px;
+  box-shadow: 0 8px 16px rgba(0,150,136,0.25);
+}
+
+#auth-modal button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(0,150,136,0.35);
+}
+
+#auth-modal .auth-switch {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+#auth-modal .auth-switch a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+#auth-modal .auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* Spinner */
+#auth-spinner.spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0,150,136,0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 0.8s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.terms-agreement {
+    margin: 15px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.checkbox-text {
+    line-height: 1.4;
+}
+
+.checkbox-text a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.checkbox-text a:hover {
+    text-decoration: underline;
+}

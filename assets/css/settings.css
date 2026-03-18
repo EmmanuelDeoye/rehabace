@@ -1,0 +1,916 @@
+/* assets/css/account-settings.css */
+/* RehabAce Account Settings Styles */
+
+/* --------------------------------------------------------------------------
+   1. SETTINGS CONTAINER
+   -------------------------------------------------------------------------- */
+.settings-container {
+    max-width: 1280px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    width: 100%;
+}
+
+.settings-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.settings-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.settings-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. SETTINGS GRID
+   -------------------------------------------------------------------------- */
+.settings-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. SIDEBAR
+   -------------------------------------------------------------------------- */
+.settings-sidebar {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.settings-sidebar:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    color: var(--text-body);
+    transition: var(--transition);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebar-link i {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.sidebar-link:hover {
+    background: rgba(0, 150, 136, 0.05);
+    color: var(--primary-color);
+}
+
+.sidebar-link:hover i {
+    color: var(--primary-color);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(0, 150, 136, 0.1), rgba(0, 121, 107, 0.1));
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+}
+
+.sidebar-link.active i {
+    color: var(--primary-color);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.sidebar-footer .logout-btn {
+    width: 100%;
+    padding: 1rem;
+    background: transparent;
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    border-radius: var(--radius-btn);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.sidebar-footer .logout-btn:hover {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   4. SETTINGS CONTENT
+   -------------------------------------------------------------------------- */
+.settings-content {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    min-height: 600px;
+}
+
+.settings-tab {
+    display: none;
+}
+
+.settings-tab.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.tab-header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. PROFILE CARD
+   -------------------------------------------------------------------------- */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-image-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-image-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1rem;
+}
+
+.profile-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 3px solid var(--card-bg);
+}
+
+.image-overlay i {
+    font-size: 1.2rem;
+}
+
+.image-overlay span {
+    display: none;
+}
+
+.image-overlay:hover {
+    transform: scale(1.1);
+    background: var(--primary-dark);
+}
+
+.image-hint {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    background: var(--bg-color);
+    color: var(--text-body);
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.1);
+}
+
+.form-group input:read-only {
+    background: var(--secondary-color);
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.field-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.form-actions .btn {
+    align-self: flex-start;
+    min-width: 200px;
+}
+
+.form-message {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+/* Info Message for Practitioners */
+.info-message {
+    background: rgba(0, 150, 136, 0.1);
+    border-left: 4px solid var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 1rem 0;
+}
+
+.info-message i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.info-message h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.info-message p {
+    color: var(--text-body);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.info-message .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. SECURITY CARD
+   -------------------------------------------------------------------------- */
+.security-card {
+    background: var(--secondary-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.security-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.password-form {
+    max-width: 500px;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.password-strength {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.strength-bar {
+    height: 6px;
+    width: 100px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.strength-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--strength-width, 0%);
+    background: var(--strength-color, #e74c3c);
+    transition: width 0.3s ease;
+}
+
+.strength-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.password-match {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.sessions-list {
+    margin: 1.5rem 0;
+}
+
+.session-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.session-item.current {
+    border: 2px solid var(--primary-color);
+}
+
+.session-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.session-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.session-info strong {
+    display: block;
+    color: var(--text-main);
+}
+
+.session-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.session-info small {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.session-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   7. NOTIFICATIONS CARD
+   -------------------------------------------------------------------------- */
+.notifications-card {
+    background: var(--secondary-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.notification-group {
+    margin-bottom: 2rem;
+}
+
+.notification-group h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.notification-info strong {
+    display: block;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.notification-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* --------------------------------------------------------------------------
+   8. LEGAL CARDS
+   -------------------------------------------------------------------------- */
+.legal-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.legal-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--secondary-color);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.legal-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+}
+
+.legal-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 150, 136, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.legal-icon i {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.legal-content {
+    flex: 1;
+}
+
+.legal-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.legal-content p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.legal-card > i {
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.legal-card:hover > i {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+/* --------------------------------------------------------------------------
+   9. SUPPORT GRID
+   -------------------------------------------------------------------------- */
+.support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.support-card {
+    background: var(--secondary-color);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.support-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.support-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.support-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.support-card p {
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.support-card .btn {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.faq-preview {
+    background: var(--secondary-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.faq-preview h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.faq-question i {
+    transition: transform 0.3s ease;
+    color: var(--primary-color);
+}
+
+.faq-item.open .faq-question i {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding-right: 20px;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 200px;
+    padding-top: 0.5rem;
+}
+
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: var(--transition);
+}
+
+.view-all-link:hover {
+    gap: 0.8rem;
+    color: var(--primary-dark);
+}
+
+/* --------------------------------------------------------------------------
+   10. REHABVERVE MODAL
+   -------------------------------------------------------------------------- */
+#rehabverve-modal .modal-content {
+    max-width: 500px;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+#rehabverve-modal .modal-icon {
+    margin-bottom: 1.5rem;
+}
+
+#rehabverve-modal .modal-icon i {
+    font-size: 4rem;
+    color: var(--primary-color);
+}
+
+#rehabverve-modal h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+#rehabverve-modal p {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+#rehabverve-modal .btn {
+    margin: 0.5rem;
+    min-width: 200px;
+}
+
+/* --------------------------------------------------------------------------
+   11. DARK MODE ADJUSTMENTS
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] .settings-sidebar,
+[data-theme="dark"] .settings-content,
+[data-theme="dark"] .security-card,
+[data-theme="dark"] .notifications-card,
+[data-theme="dark"] .legal-card,
+[data-theme="dark"] .support-card,
+[data-theme="dark"] .faq-preview {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .session-item,
+[data-theme="dark"] .notification-item {
+    background: var(--bg-color);
+}
+
+[data-theme="dark"] .info-message {
+    background: rgba(38, 166, 154, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   12. RESPONSIVE DESIGN
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+    .settings-grid {
+        grid-template-columns: 240px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+    
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .settings-sidebar {
+        position: static;
+        margin-bottom: 1rem;
+    }
+    
+    .sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .sidebar-link {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 0.8rem;
+    }
+    
+    .sidebar-link span {
+        display: none;
+    }
+    
+    .sidebar-link i {
+        font-size: 1.3rem;
+        margin: 0;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .legal-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .support-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .settings-content {
+        padding: 1.5rem;
+    }
+    
+    .profile-image-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    #rehabverve-modal .modal-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    #rehabverve-modal .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+}
