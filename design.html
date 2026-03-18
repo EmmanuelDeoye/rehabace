@@ -18,50 +18,55 @@
 </head>
 <body>
     
-    
-    <!-- Updated header section -->
+    <!-- STICKY HEADER -->
 <header class="site-header">
   <div class="container header-container">
     <div class="logo">REHAB<span class="ace">ACE</span></div>
-    
-    <!-- Right side: cart, theme toggle, mobile menu button -->
-    
-    
-    <!-- Navigation (desktop: inline, mobile: slide-out) -->
-    <nav class="main-nav" id="mainNav">
-      <ul>
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#designs">Designs</a></li>
-        <li><a href="#marketplace">Marketplace</a></li>
-        <li><a href="#signup">Sign Up</a></li>
-      </ul>
-    </nav>
-    
-    <div class="header-actions">
-      <!-- Cart Icon -->
-      <div class="cart-icon-container" id="cart-icon-container" style="display:none">
-        <div class="icon-circle">
-          <i class='bx bx-cart'></i>
-          <span id="cart-count" class="cart-badge">0</span>
-        </div>
-      </div>
-      
-      <!-- Theme Toggle (single icon) -->
-      <div class="theme-toggle" id="themeToggle">
-        <i class="fas fa-sun"></i> <!-- will switch to moon in dark mode -->
-      </div>
-      
-      <!-- Mobile Menu Toggle -->
-      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
+
+    <!-- Right side: cart, theme toggle, profile icon, mobile menu button -->
+    <!-- In the header-actions div, ensure profile icon is before cart -->
+<div class="header-actions">
+  
+
+  
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-sun"></i>
+  </div>
+  
+  
+  <!-- Profile Icon (visible when logged in) -->
+  <div class="profile-image-nav" id="profileImageNav" style="display: none;">
+    <img src="assets/img/profile.png" alt="Profile">
+  </div>
+
+  <!-- Mobile Menu Toggle (hidden when logged in on mobile) -->
+  <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+    <i class="fas fa-bars"></i>
+  </button>
+</div>
+
+<!-- Navigation -->
+<nav class="main-nav" id="mainNav">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">Designs</a></li>
+    <li><a href="marketplace.html">Marketplace</a></li>
+    <li><a href="index.html#about">About Us</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <!-- My Account – visible only when logged in (via auth.js) -->
+    <li id="my-profile-nav-item"><a href="users.html?id=${uid}">My Account</a></li>
+    <!-- Sign Up – visible only when logged out (via auth.js) -->
+    <li id="signup-nav-item"><a href="account.html">Sign Up</a></li>
+  </ul>
+  
+</nav>
   </div>
 </header>
 
-  <!-- OVERLAY FOR MOBILE NAV -->
-  <div class="nav-overlay" id="navOverlay"></div>
+<!-- OVERLAY (id kept as 'navOverlay' for home.js) -->
+<div class="nav-overlay" id="navOverlay"></div>
 
     <main class="designs-main">
         <section class="designs-controls">
@@ -98,10 +103,16 @@
 
         <section class="designs-gallery">
             <div class="designs-container" id="designs-container">
-                <!-- Designs will be loaded here -->
+                <!-- Skeleton cards will be shown here by default -->
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
             </div>
             
-            <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-overlay" id="loading-overlay" style="display: none;">
                 <div class="spinner"></div>
                 <p>Loading designs...</p>
             </div>
@@ -113,68 +124,74 @@
             </div>
         </section>
         
-        <!-- Auth Modal (unchanged functionality) -->
-        <div id="auth-modal" class="modal">
-            <div class="modal-content">
-                <span class="modal-close">&times;</span>
-                <div class="auth-tabs">
-                    <div class="auth-tab active" data-form="login">Login</div>
-                    <div class="auth-tab" data-form="register">Register</div>
-                </div>
-
-                <form id="login-form" class="auth-form active">
-                    <div class="error-message" id="login-error"></div>
-                    <div class="form-group">
-                        <input type="email" id="login-email" placeholder="Email" required>
-                    </div>
-                    <div class="form-group password-group">
-                        <input type="password" id="login-password" placeholder="Password" required>
-                        <span class="password-toggle" id="login-password-toggle">
-                            <i class='bx bx-hide'></i>
-                        </span>
-                    </div>
-                    
-                    <div class="forgot-password">
-                        <a href="forgot-password.html">Forgot your password?</a>
-                    </div>
-                    
-                    <div class="form-group terms-agreement">
-                        <label for="login-terms">By clicking the login button, you agree to our <a href="terms.html" target="_blank">Terms</a> and <a href="privacy.html" target="_blank">Privacy policy</a></label>
-                    </div>
-                    
-                    <button type="submit">Login</button>
-                    <div class="auth-switch">
-                        Don't have an account? <a href="#" id="show-register">Register</a>
-                    </div>
-                </form>
-
-                <form id="register-form" class="auth-form">
-                    <div class="error-message" id="register-error"></div>
-                    <div class="form-group">
-                        <input type="name" id="register-name" placeholder="Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="register-email" placeholder="Email" required>
-                    </div>
-                    <div class="form-group password-group">
-                        <input type="password" id="register-password" placeholder="Password (min. 6 characters)" required>
-                        <span class="password-toggle" id="register-password-toggle">
-                            <i class='bx bx-hide'></i>
-                        </span>
-                    </div>
-                    
-                    <div class="form-group terms-agreement">
-                        <label for="login-terms">By clicking the register button, you agree to our <a href="terms.html" target="_blank">Terms</a> and <a href="privacy.html" target="_blank">Privacy policy</a></label>
-                    </div>
-                    
-                    <button type="submit">Create Account</button>
-                    <div class="auth-switch">
-                        Already have an account? <a href="#" id="show-login">Login</a>
-                    </div>
-                    <div id="auth-spinner" class="spinner" style="display: none;"></div>
-                </form>
+        <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-form="login">Login</div>
+                <div class="auth-tab" data-form="register">Register</div>
             </div>
+
+            <form id="login-form" class="auth-form active">
+                <div class="error-message" id="login-error"></div>
+                <div class="form-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <span class="password-toggle" id="login-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="forgot-password.html">Forgot your password?</a>
+                </div>
+                
+                <div class="form-group terms-agreement">
+    <label class="checkbox-label">
+        <input type="checkbox" id="login-terms" required>
+        <span class="checkbox-text">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></span>
+    </label>
+</div>
+                
+                <button type="submit">Login</button>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="show-register">Register</a>
+                </div>
+            </form>
+
+            <form id="register-form" class="auth-form">
+                <div class="error-message" id="register-error"></div>
+                <div class="form-group">
+                    <input type="text" id="register-name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="register-email" placeholder="Email" required>
+                </div>
+                <div class="form-group password-group">
+                    <input type="password" id="register-password" placeholder="Password (min. 6 characters)" required>
+                    <span class="password-toggle" id="register-password-toggle">
+                        <i class='bx bx-hide'></i>
+                    </span>
+                </div>
+                
+                <div class="form-group terms-agreement">
+    <label class="checkbox-label">
+        <input type="checkbox" id="login-terms" required>
+        <span class="checkbox-text">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></span>
+    </label>
+</div>
+                
+                <button type="submit">Create Account</button>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="show-login">Login</a>
+                </div>
+                <div id="auth-spinner" class="spinner" style="display: none;"></div>
+            </form>
         </div>
+    </div>
 
         <!-- Floating Help Button (blended) -->
         <a href="https://wa.me/2348132912880?text=Hello! I would like to get recommendations for the perfect sensory room, creche, or playground setup for my needs." class="floating-help-button">
@@ -241,8 +258,9 @@
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
     <script src="assets/js/configuration.js"></script>
     <script src="assets/js/home.js" defer></script>
+    <script src="assets/js/auth.js" defer></script>
     <script src="assets/js/design.js" defer></script>
-    <script src="assets/js/track.js" defer></script>
+    
     <!-- Theme toggle for design page (optional) -->
     
 </body>

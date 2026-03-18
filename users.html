@@ -1,0 +1,270 @@
+<!-- users.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REHABACE - User Profile</title>
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Google Fonts - same as main site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (for compatibility) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main site styles -->
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/users.css">
+    
+    <link rel="icon" href="assets/img/logo.png">
+</head>
+<body>
+    <!-- REHABACE STICKY HEADER (same as index.html) -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">REHAB<span class="ace">ACE</span></div>
+
+            <div class="header-actions">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </div>
+
+                <!-- Profile Icon -->
+                <div class="profile-image-nav" id="profileImageNav" style="display: none;">
+                    <img src="assets/img/default-profile.png" alt="Profile">
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html#hero">Home</a></li>
+                    <li><a href="index.html#designs">Designs</a></li>
+                    <li><a href="index.html#marketplace">Marketplace</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li id="my-profile-nav-item" style="display: none;"><a href="#">My Account</a></li>
+                    <li id="signup-nav-item"><a href="#">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- OVERLAY -->
+    <div class="nav-overlay" id="navOverlay"></div>
+    
+    <!-- Main Profile Container -->
+    <div class="user-profile-container">
+        <!-- Profile Header Section -->
+        <div class="profile-header">
+            <!-- Edit Icon - Only visible to profile owner -->
+            <div class="edit-icon" id="edit-icon" style="display: none;">
+                <i class='bx bx-cog'></i>
+            </div>
+            
+            <div class="profile-image-container">
+                <img src="assets/img/profile.png" class="profile-image" alt="Profile" id="profile-image">
+                <div class="online-status"></div>
+            </div>
+            <h1 class="user-name">Loading...</h1>
+            <p class="user-title">Loading...</p>
+            
+            <!-- Contact Icons -->
+            <div class="contact-icons">
+                <a href="#" class="contact-icon whatsapp" id="whatsapp-link" target="_blank">
+                    <i class='bx bxl-whatsapp'></i>
+                </a>
+                <a href="#" class="contact-icon email" id="email-link" target="_blank">
+                    <i class='bx bx-envelope'></i>
+                </a>
+                <a href="#" class="contact-icon phone" id="phone-link">
+                    <i class='bx bx-phone'></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Profile Details Section -->
+        <div class="profile-details">
+            <!-- Contact Information Card (always visible) -->
+            <div class="detail-card">
+                <h2 class="section-title">Contact Information</h2>
+                <div class="info-item">
+                    <i class='bx bx-envelope'></i>
+                    <div>
+                        <p class="info-label">Email</p>
+                        <p class="info-value" id="email-value">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-phone'></i>
+                    <div>
+                        <p class="info-label">Phone</p>
+                        <p class="info-value" id="phone-value">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-map'></i>
+                    <div>
+                        <p class="info-label">Location</p>
+                        <p class="info-value" id="location-value">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-calendar'></i>
+                    <div>
+                        <p class="info-label">Member Since</p>
+                        <p class="info-value" id="member-since">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Details Card (hidden by default) -->
+            <div class="detail-card" id="supplier-details" style="display: none;">
+                <h2 class="section-title">Supplier Information</h2>
+                <div class="info-item">
+                    <i class='bx bx-buildings'></i>
+                    <div>
+                        <p class="info-label">Organization</p>
+                        <p class="info-value" id="supplier-org">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-package'></i>
+                    <div>
+                        <p class="info-label">Products/Services</p>
+                        <p class="info-value" id="supplier-products">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-certification'></i>
+                    <div>
+                        <p class="info-label">Certifications</p>
+                        <p class="info-value" id="supplier-certifications">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Section (for suppliers, hidden by default) -->
+    <div class="rating-section" id="rating-section" style="display: none;">
+        <h3>Rate this Supplier</h3>
+        <div class="rating-controls">
+            <div class="stars" id="stars">
+                <i class='bx bx-star' data-rating="1"></i>
+                <i class='bx bx-star' data-rating="2"></i>
+                <i class='bx bx-star' data-rating="3"></i>
+                <i class='bx bx-star' data-rating="4"></i>
+                <i class='bx bx-star' data-rating="5"></i>
+            </div>
+            <textarea id="rating-comment" placeholder="Share your experience with this supplier..." rows="3"></textarea>
+            <button id="submit-rating" class="btn btn-primary">Submit Rating</button>
+        </div>
+         
+    </div>
+   
+    
+    <!-- Settings Section (only visible to profile owner) -->
+    <div class="settings-section">
+        <button id="settings-btn" class="settings-btn">
+            <i class='bx bx-cog'></i> Account Settings
+        </button>
+    </div>
+
+    <!-- Profile Footer (only visible to profile owner) -->
+    <div class="profile-footer" id="profile-footer" style="display: none;">
+        <div class="profile-views">
+            <i class='bx bx-show'></i>
+            <span>Profile Views: <span id="view-count">0</span></span>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Edit Profile</h2>
+            
+            <!-- Profile Image Upload -->
+            <div class="form-group">
+                <label for="edit-profile-image">Profile Image</label>
+                <input type="file" id="edit-profile-image" accept="image/*">
+            </div>
+            
+            <!-- Image Preview Container -->
+            <div class="image-preview-container">
+                <img src="assets/img/profile.png" alt="Profile Preview" class="image-preview" id="edit-image-preview">
+                <div class="image-actions">
+                    <button type="button" id="change-image-btn" class="image-action-btn">
+                        <i class='bx bx-image-add'></i> Change Image
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Upload Progress -->
+            <div id="image-upload-progress" class="upload-progress" style="display: none;">
+                <div class="progress-bar"></div>
+                <span class="progress-text">Uploading: 0%</span>
+            </div>
+            
+            <!-- Common Fields (for all users) -->
+            <div class="form-group">
+                <label for="edit-name">Full Name</label>
+                <input type="text" id="edit-name" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-phone">Phone Number</label>
+                <input type="tel" id="edit-phone" placeholder="Enter your phone number" required>
+            </div>
+            
+            <!-- Supplier Fields (hidden by default) -->
+            <div id="supplier-fields" style="display: none;">
+                <h3>Supplier Information</h3>
+                <div class="form-group">
+                    <label for="edit-org">Organization Name</label>
+                    <input type="text" id="edit-org" placeholder="Enter your organization name">
+                </div>
+                <div class="form-group">
+                    <label for="edit-products">Products/Services Offered</label>
+                    <textarea id="edit-products" rows="3" placeholder="List the products or services you offer (one per line)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-certifications">Certifications (optional)</label>
+                    <input type="text" id="edit-certifications" placeholder="e.g., ISO Certified, Licensed, Registered">
+                </div>
+            </div>
+            
+            <!-- Error and Success Messages -->
+            <div id="edit-error" class="error-message"></div>
+            <div id="edit-success" class="success-message" style="display: none;">
+                <i class='bx bx-check-circle'></i> Profile updated successfully!
+            </div>
+            
+            <!-- Save Button -->
+            <button id="save-profile-btn" class="btn btn-primary">Save Changes</button>
+        </div>
+    </div>
+
+    
+    
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/users.js"></script>
+    <script src="assets/js/home.js"></script>
+    
+</body>
+</html>

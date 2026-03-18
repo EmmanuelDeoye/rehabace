@@ -1,0 +1,506 @@
+<!-- account-settings.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REHABACE - Account Settings</title>
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main site styles -->
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+    
+    <link rel="icon" href="assets/img/favicon.png">
+</head>
+<body>
+    <!-- REHABACE STICKY HEADER -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">REHAB<span class="ace">ACE</span></div>
+
+            <div class="header-actions">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </div>
+
+                <!-- Profile Icon -->
+                <div class="profile-image-nav" id="profileImageNav" style="display: none;">
+                    <img src="assets/img/default-profile.png" alt="Profile">
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileToggle" aria-label="menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html#hero">Home</a></li>
+                    <li><a href="index.html#designs">Designs</a></li>
+                    <li><a href="index.html#marketplace">Marketplace</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li id="my-profile-nav-item" style="display: none;"><a href="#">My Account</a></li>
+                    <li id="signup-nav-item"><a href="#">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- OVERLAY -->
+    <div class="nav-overlay" id="navOverlay"></div>
+    
+    <!-- Main Settings Container -->
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>Account Settings</h1>
+            <p>Manage your profile, security, and preferences</p>
+        </div>
+        
+        <div class="settings-grid">
+            <!-- Left Sidebar - Navigation -->
+            <div class="settings-sidebar">
+                <div class="sidebar-nav">
+                    <a href="#profile" class="sidebar-link active" data-tab="profile">
+                        <i class='bx bx-user'></i>
+                        <span>Profile Information</span>
+                    </a>
+                    <a href="#security" class="sidebar-link" data-tab="security">
+                        <i class='bx bx-lock-alt'></i>
+                        <span>Security</span>
+                    </a>
+                    <a href="#notifications" class="sidebar-link" data-tab="notifications">
+                        <i class='bx bx-bell'></i>
+                        <span>Notifications</span>
+                    </a>
+                    <a href="#legal" class="sidebar-link" data-tab="legal">
+                        <i class='bx bx-file'></i>
+                        <span>Legal & Policies</span>
+                    </a>
+                    <a href="#contact" class="sidebar-link" data-tab="contact">
+                        <i class='bx bx-support'></i>
+                        <span>Contact & Support</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <button id="logout-btn" class="logout-btn">
+                        <i class='bx bx-log-out'></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Right Content Area -->
+            <div class="settings-content">
+                <!-- Profile Information Tab -->
+                <div class="settings-tab active" id="profile-tab">
+                    <div class="tab-header">
+                        <h2>Profile Information</h2>
+                        <p>Update your personal information and how others see you on RehabAce</p>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <div class="profile-image-section">
+                            <div class="profile-image-wrapper">
+                                <img src="assets/img/profile.png" alt="Profile" id="profile-image-preview">
+                                <div class="image-overlay" id="change-photo-btn">
+                                    <i class='bx bx-camera'></i>
+                                    <span>Change</span>
+                                </div>
+                            </div>
+                            <input type="file" id="profile-image-input" accept="image/*" style="display: none;">
+                            <p class="image-hint">Click the camera icon to change your profile picture</p>
+                        </div>
+                        
+                        <div class="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="full-name">Full Name</label>
+                                    <input type="text" id="full-name" placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" placeholder="Enter your email" readonly>
+                                    <small class="field-note">Email cannot be changed</small>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" placeholder="Enter your phone number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" id="location" placeholder="Enter your location">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="bio">Bio</label>
+                                    <textarea id="bio" rows="4" placeholder="Tell others a bit about yourself"></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Supplier Fields (hidden by default) -->
+                            <div id="supplier-fields" style="display: none;">
+                                <h3 class="section-subtitle">Supplier Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="org-name">Organization Name</label>
+                                        <input type="text" id="org-name" placeholder="Enter your organization name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="org-products">Products/Services</label>
+                                        <input type="text" id="org-products" placeholder="e.g., Sensory equipment, Therapy furniture">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="org-certifications">Certifications</label>
+                                        <input type="text" id="org-certifications" placeholder="e.g., ISO Certified, Licensed">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Practitioner/Center Message (hidden by default) -->
+                            <div id="practitioner-message" class="info-message" style="display: none;">
+                                <i class='bx bx-info-circle'></i>
+                                <div>
+                                    <h4>Healthcare Professional Account</h4>
+                                    <p>You're registered as a healthcare professional or center. Your profile is managed on <strong>RehabVerve</strong> - our platform for connecting clients with healthcare professionals.</p>
+                                    <a href="#" id="redirect-to-verve" class="btn btn-primary" target="_blank">
+                                        <i class='bx bx-link-external'></i> Manage Profile on RehabVerve
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button id="save-profile-btn" class="btn btn-primary">Save Changes</button>
+                                <div id="profile-save-message" class="form-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Security Tab -->
+                <div class="settings-tab" id="security-tab">
+                    <div class="tab-header">
+                        <h2>Security</h2>
+                        <p>Manage your password and account security</p>
+                    </div>
+                    
+                    <div class="security-card">
+                        <h3>Change Password</h3>
+                        <div class="password-form">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="current-password" placeholder="Enter current password">
+                                    <span class="password-toggle" id="current-password-toggle">
+                                        <i class='bx bx-hide'></i>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="new-password" placeholder="Enter new password (min. 6 characters)">
+                                    <span class="password-toggle" id="new-password-toggle">
+                                        <i class='bx bx-hide'></i>
+                                    </span>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar" id="strength-bar"></div>
+                                    <span class="strength-text" id="strength-text">Too weak</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="confirm-password" placeholder="Confirm new password">
+                                    <span class="password-toggle" id="confirm-password-toggle">
+                                        <i class='bx bx-hide'></i>
+                                    </span>
+                                </div>
+                                <div class="password-match" id="password-match"></div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button id="change-password-btn" class="btn btn-primary">Update Password</button>
+                                <div id="password-message" class="form-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="security-card">
+                        <h3>Account Sessions</h3>
+                        <p>Manage where you're logged in</p>
+                        <div class="sessions-list" id="sessions-list">
+                            <!-- Sessions will be populated here -->
+                            <div class="session-item current">
+                                <div class="session-info">
+                                    <i class='bx bx-devices'></i>
+                                    <div>
+                                        <strong>Current Session</strong>
+                                        <p>Lagos, Nigeria · Chrome on Windows</p>
+                                        <small>Last active: Now</small>
+                                    </div>
+                                </div>
+                                <span class="session-badge">Current</span>
+                            </div>
+                        </div>
+                        <button id="logout-all-btn" class="btn btn-outline">Sign out of all devices</button>
+                    </div>
+                </div>
+                
+                <!-- Notifications Tab -->
+                <div class="settings-tab" id="notifications-tab">
+                    <div class="tab-header">
+                        <h2>Notifications</h2>
+                        <p>Choose what updates you'd like to receive</p>
+                    </div>
+                    
+                    <div class="notifications-card">
+                        <div class="notification-group">
+                            <h3>Email Notifications</h3>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <strong>Marketing emails</strong>
+                                    <p>Receive updates about new products, designs, and offers</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="marketing-emails" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <strong>Order updates</strong>
+                                    <p>Get notifications about your orders and shipments</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="order-updates" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <strong>Product inquiries</strong>
+                                    <p>Be notified when someone asks about your products (suppliers only)</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="product-inquiries" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button id="save-notifications-btn" class="btn btn-primary">Save Preferences</button>
+                            <div id="notifications-message" class="form-message"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Legal & Policies Tab -->
+                <div class="settings-tab" id="legal-tab">
+                    <div class="tab-header">
+                        <h2>Legal & Policies</h2>
+                        <p>Review our terms, privacy policy, and other legal information</p>
+                    </div>
+                    
+                    <div class="legal-cards">
+                        <a href="terms.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-file'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Terms of Service</h3>
+                                <p>Read our terms and conditions for using RehabAce</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                        
+                        <a href="privacy.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-lock'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Privacy Policy</h3>
+                                <p>Learn how we collect and protect your data</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                        
+                        <a href="cookies.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-cookie'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Cookie Policy</h3>
+                                <p>Understand how we use cookies on our site</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                        
+                        <a href="refund.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-undo'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Refund Policy</h3>
+                                <p>Our policy on returns and refunds</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                        
+                        <a href="shipping.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-package'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Shipping Policy</h3>
+                                <p>Information about delivery and shipping</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                        
+                        <a href="disclaimer.html" class="legal-card" target="_blank">
+                            <div class="legal-icon">
+                                <i class='bx bx-error-circle'></i>
+                            </div>
+                            <div class="legal-content">
+                                <h3>Disclaimer</h3>
+                                <p>Important disclaimers about our products and services</p>
+                            </div>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact & Support Tab -->
+                <div class="settings-tab" id="contact-tab">
+                    <div class="tab-header">
+                        <h2>Contact & Support</h2>
+                        <p>Get in touch with our team</p>
+                    </div>
+                    
+                    <div class="support-grid">
+                        <div class="support-card">
+                            <i class='bx bx-envelope'></i>
+                            <h3>Email Us</h3>
+                            <p>support@rehabace.com</p>
+                            <p>info@rehabace.com</p>
+                            <a href="mailto:support@rehabace.com" class="btn btn-outline">Send Email</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <i class='bx bx-phone'></i>
+                            <h3>Call Us</h3>
+                            <p>+234 8132-912-880</p>
+                            <p>Mon-Fri, 9am-5pm</p>
+                            <a href="tel:+2348132912880" class="btn btn-outline">Call Now</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <i class='bx bxl-whatsapp'></i>
+                            <h3>WhatsApp</h3>
+                            <p>Quick responses on WhatsApp</p>
+                            <p>+234 8132-912-880</p>
+                            <a href="https://wa.me/2348132912880" class="btn btn-outline" target="_blank">Chat on WhatsApp</a>
+                        </div>
+                        
+                        <div class="support-card">
+                            <i class='bx bx-map'></i>
+                            <h3>Visit Us</h3>
+                            <p>44, Shonola Street</p>
+                            <p>Ogba, Lagos State</p>
+                            <a href="https://maps.google.com" class="btn btn-outline" target="_blank">Get Directions</a>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-preview">
+                        <h3>Frequently Asked Questions</h3>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>How do I place an order?</span>
+                                    <i class='bx bx-chevron-down'></i>
+                                </div>
+                                <div class="faq-answer">
+                                    You can browse our marketplace, add items to cart, and checkout using Paystack.
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>What payment methods do you accept?</span>
+                                    <i class='bx bx-chevron-down'></i>
+                                </div>
+                                <div class="faq-answer">
+                                    We accept all major Nigerian cards, bank transfers, and USSD via Paystack.
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>How long does delivery take?</span>
+                                    <i class='bx bx-chevron-down'></i>
+                                </div>
+                                <div class="faq-answer">
+                                    Delivery typically takes 3-7 business days within Lagos, and 5-10 days to other states.
+                                </div>
+                            </div>
+                        </div>
+                        <a href="index.html#faq" class="view-all-link">View all FAQs <i class='bx bx-right-arrow-alt'></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RehabVerve Redirect Modal (for practitioners/centers) -->
+    <div id="rehabverve-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-icon">
+                <i class='bx bx-info-circle'></i>
+            </div>
+            <h2>Healthcare Professional Account</h2>
+            <p>You're registered as a healthcare professional or center on <strong>RehabVerve</strong> - our dedicated platform for connecting clients with healthcare professionals.</p>
+            <p>To edit your professional profile, please visit RehabVerve:</p>
+            <a href="https://rehabverve.com.ng/" id="rehabverve-redirect-link" class="btn btn-primary" target="_blank">
+                <i class='bx bx-link-external'></i> Go to RehabVerve
+            </a>
+            <button class="btn btn-outline" id="close-modal-btn">Stay on RehabAce</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="assets/js/configuration.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/settings.js"></script>
+    <script src="assets/js/home.js"></script>
+</body>
+</html>
