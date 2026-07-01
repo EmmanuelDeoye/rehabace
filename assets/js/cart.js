@@ -2,7 +2,7 @@
 
 // Initialize Cart from LocalStorage
 let cart = JSON.parse(localStorage.getItem('rehabace_cart')) || [];
-const paystackPublicKey = 'pk_live_4c70eb590578eaedff80c3ea23da34d711af4fec';
+const paystackPublicKey = 'pk_live_1fd1c3c6380edae5c08ca9f1e69db8d717534af2';
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
